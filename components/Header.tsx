@@ -1,40 +1,72 @@
 "use client";
 
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function Header() {
+    const t = useTranslations('Navigation');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const pathname = usePathname();
+    const router = useRouter();
+
+    const toggleLanguage = () => {
+        if (pathname.startsWith('/en')) {
+            router.push(pathname.replace('/en', '/it'));
+        } else if (pathname.startsWith('/it')) {
+            router.push(pathname.replace('/it', '/en'));
+        } else {
+            router.push(`/en${pathname}`);
+        }
+    };
+
+    const currentLang = pathname.startsWith('/en') ? 'EN' : 'IT';
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
     };
+
+    const localePrefix = pathname.startsWith('/en') ? '/en' : '/it';
+
+    const getLink = (path: string) => {
+        if (path === '/') return `${localePrefix}`;
+        return `${localePrefix}${path}`;
+    }
 
     return (
         <header className="sticky top-0 z-50 w-full backdrop-blur-md bg-black/50 border-b border-white/10">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <div className="flex-shrink-0">
-                    <Link href="/" className="text-2xl font-bold tracking-tighter text-white hover:text-red-500 transition-colors duration-300 uppercase italic">
+                    <Link href={getLink('/')} className="text-2xl font-bold tracking-tighter text-white hover:text-red-500 transition-colors duration-300 uppercase italic">
                         Nightkids
                     </Link>
                 </div>
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">
-                    <Link href="/events" className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
-                        Latest Events
+                    <Link href={getLink('/events')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
+                        {t('events')}
                     </Link>
-                    <Link href="/about" className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
-                        About Us
+                    <Link href={getLink('/about')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
+                        {t('about')}
                     </Link>
-                    <Link href="/shop" className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
-                        Shop
+                    <Link href={getLink('/shop')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
+                        {t('shop')}
                     </Link>
+
+                    <button onClick={toggleLanguage} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
+                        {currentLang}
+                    </button>
                 </nav>
 
                 {/* Mobile Menu Button */}
-                <div className="md:hidden">
+                <div className="md:hidden flex items-center gap-4">
+                    <button onClick={toggleLanguage} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
+                        {currentLang}
+                    </button>
+
                     <button
                         className="text-white focus:outline-none"
                         onClick={toggleMobileMenu}
@@ -58,32 +90,32 @@ export default function Header() {
             {isMobileMenuOpen && (
                 <div className="md:hidden absolute top-16 left-0 w-full bg-neutral-950 border-b border-white/10 p-4 flex flex-col space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
                     <Link
-                        href="/"
+                        href={getLink('/')}
                         className="text-lg font-bold text-white uppercase tracking-widest hover:text-red-500"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        Home
+                        {t('home')}
                     </Link>
                     <Link
-                        href="/events"
+                        href={getLink('/events')}
                         className="text-lg font-bold text-gray-300 uppercase tracking-widest hover:text-white"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        Latest Events
+                        {t('events')}
                     </Link>
                     <Link
-                        href="/about"
+                        href={getLink('/about')}
                         className="text-lg font-bold text-gray-300 uppercase tracking-widest hover:text-white"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        About Us
+                        {t('about')}
                     </Link>
                     <Link
-                        href="/shop"
+                        href={getLink('/shop')}
                         className="text-lg font-bold text-gray-300 uppercase tracking-widest hover:text-white"
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
-                        Shop
+                        {t('shop')}
                     </Link>
                 </div>
             )}

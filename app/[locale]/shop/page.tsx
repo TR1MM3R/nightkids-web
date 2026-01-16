@@ -1,7 +1,10 @@
 import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
+import { useTranslations } from 'next-intl';
 
 export default function ShopPage() {
+    const t = useTranslations('Shop');
+
     return (
         <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white flex flex-col">
             <Header />
@@ -21,22 +24,22 @@ export default function ShopPage() {
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-4">
-                        Drop <span className="text-red-600">Incoming</span>
+                        {t('drop')} <span className="text-red-600">{t('incoming')}</span>
                     </h1>
 
                     <p className="text-gray-400 text-lg uppercase tracking-widest mb-8 font-light">
-                        Official Nightkids Merch. <br /> Get early access to the new collection.
+                        {t('description')}
                     </p>
 
                     {/* Newsletter Form */}
                     <div className="flex flex-col md:flex-row gap-4 w-full">
                         <input
                             type="email"
-                            placeholder="ENTER YOUR EMAIL"
+                            placeholder={t('emailPlaceholder')}
                             className="flex-grow bg-neutral-900 border border-neutral-800 text-white px-6 py-4 rounded-lg focus:outline-none focus:border-red-600 transition-colors uppercase tracking-widest placeholder:text-neutral-600"
                         />
                         <button className="bg-white text-black font-bold uppercase tracking-widest px-8 py-4 rounded-lg hover:bg-neutral-200 transition-colors">
-                            Notify Me
+                            {t('notifyMe')}
                         </button>
                     </div>
                 </FadeIn>

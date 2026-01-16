@@ -1,0 +1,52 @@
+{
+    "Navigation": {
+        "home": "Home",
+        "events": "Latest Events",
+        "about": "About Us",
+        "shop": "Shop"
+    },
+    "Home": {
+        "Hero": {
+            "subtitle": "Street Racing Team & Car Culture"
+        },
+        "BentoGrid": {
+            "videoPlaceholder": "[ Video Placeholder ]",
+            "latestDrop": "Latest Drop",
+            "nightRun": "Night Run Vol. 4",
+            "nightRunDesc": "The team hits the mountain pass at midnight. Pure sound, no filters.",
+            "photoPlaceholder": "[ Team Photo ]",
+            "theTeam": "The Team",
+            "theTeamDesc": "Learn about our history and philosophy.",
+            "shop": "Shop",
+            "comingSoon": "Coming Soon"
+        },
+        "Footer": {
+            "copyright": "© 2026 Nightkids"
+        }
+    },
+    "Events": {
+        "titleSeason": "Season 2025",
+        "titleArchive": "Archive",
+        "videoPlaceholder": "[ Video Placeholder ]",
+        "midnightRun": "Midnight Run Vol. 3",
+        "driftPractice": "Drift Practice #04",
+        "tougeBattle": "Touge Battle: Red vs Blue",
+        "behindScenes": "Behind the Scenes"
+    },
+    "About": {
+        "photoPlaceholder": "[ Team Portrait ]",
+        "whoWe": "Who We",
+        "are": "Are",
+        "p1": "<strong>Nightkids</strong> was born on the streets, fueled by a passion for speed, precision, and the art of the drift.",
+        "p2": "We are not just a racing team; we are a collective of creators, mechanics, and drivers united by the underground car culture. From the mountain passes to the digital screen, we bridge the gap between raw automotive performance and high-octane content creation.",
+        "p3": "Every member brings a unique skill to the table, but we all share the same drive: to push the limits and leave our mark on the asphalt.",
+        "cta": "Join the Movement"
+    },
+    "Shop": {
+        "drop": "Drop",
+        "incoming": "Incoming",
+        "description": "Official Nightkids Merch.\nGet early access to the new collection.",
+        "emailPlaceholder": "ENTER YOUR EMAIL",
+        "notifyMe": "Notify Me"
+    }
+}

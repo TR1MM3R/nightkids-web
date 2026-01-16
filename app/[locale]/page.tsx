@@ -1,8 +1,11 @@
 import Header from "@/components/Header";
 import BentoGrid from "@/components/BentoGrid";
 import FadeIn from "@/components/FadeIn";
+import { useTranslations } from 'next-intl';
 
 export default function Home() {
+  const t = useTranslations('Home');
+
   return (
     <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
       <Header />
@@ -22,7 +25,7 @@ export default function Home() {
               <span className="text-white">Kids</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-400 max-w-2xl mx-auto uppercase tracking-widest font-light">
-              Street Racing Team & Car Culture
+              {t('Hero.subtitle')}
             </p>
           </FadeIn>
         </div>
@@ -34,7 +37,7 @@ export default function Home() {
 
       {/* Footer spacer for now */}
       <section className="py-10 text-center text-neutral-600 text-sm uppercase tracking-widest">
-        &copy; 2026 Nightkids
+        {t('Footer.copyright')}
       </section>
     </main>
   );

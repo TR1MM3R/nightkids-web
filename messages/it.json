@@ -1,0 +1,52 @@
+{
+    "Navigation": {
+        "home": "Home",
+        "events": "Ultimi Eventi",
+        "about": "Chi Siamo",
+        "shop": "Shop"
+    },
+    "Home": {
+        "Hero": {
+            "subtitle": "Street Racing Team & Car Culture"
+        },
+        "BentoGrid": {
+            "videoPlaceholder": "[ Video Placeholder ]",
+            "latestDrop": "Ultimo Drop",
+            "nightRun": "Night Run Vol. 4",
+            "nightRunDesc": "Il team affronta il passo di montagna a mezzanotte. Suono puro, niente filtri.",
+            "photoPlaceholder": "[ Foto Team ]",
+            "theTeam": "Il Team",
+            "theTeamDesc": "Scopri la nostra storia e filosofia.",
+            "shop": "Shop",
+            "comingSoon": "Coming Soon"
+        },
+        "Footer": {
+            "copyright": "© 2026 Nightkids"
+        }
+    },
+    "Events": {
+        "titleSeason": "Stagione 2025",
+        "titleArchive": "Archivio",
+        "videoPlaceholder": "[ Video Placeholder ]",
+        "midnightRun": "Midnight Run Vol. 3",
+        "driftPractice": "Drift Practice #04",
+        "tougeBattle": "Touge Battle: Red vs Blue",
+        "behindScenes": "Dietro le Quinte"
+    },
+    "About": {
+        "photoPlaceholder": "[ Ritratto Team ]",
+        "whoWe": "Chi",
+        "are": "Siamo",
+        "p1": "<strong>Nightkids</strong> è nato dalla strada, alimentato dalla passione per la velocità, la precisione e l'arte del drift.",
+        "p2": "Non siamo solo un team di corse; siamo un collettivo di creatori, meccanici e piloti uniti dalla cultura automobilistica underground. Dai passi di montagna allo schermo digitale, colmiamo il divario tra prestazioni automobilistiche pure e creazione di contenuti ad alto numero di ottani.",
+        "p3": "Ogni membro porta al tavolo un'abilità unica, ma condividiamo tutti la stessa spinta: superare i limiti e lasciare il segno sull'asfalto.",
+        "cta": "Unisciti al Movimento"
+    },
+    "Shop": {
+        "drop": "Drop",
+        "incoming": "In Arrivo",
+        "description": "Merch Ufficiale Nightkids.\nOttieni accesso anticipato alla nuova collezione.",
+        "emailPlaceholder": "INSERISCI LA TUA EMAIL",
+        "notifyMe": "Avvisami"
+    }
+}
