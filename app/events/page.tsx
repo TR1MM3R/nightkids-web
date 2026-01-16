@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import FadeIn from "@/components/FadeIn";
 
 export default function EventsPage() {
     return (
@@ -6,12 +7,14 @@ export default function EventsPage() {
             <Header />
 
             <section className="container mx-auto px-4 py-20 mt-10">
-                <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-12 text-center">
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">
-                        Season 2025
-                    </span>
-                    <span className="text-white ml-4">Archive</span>
-                </h1>
+                <FadeIn>
+                    <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-12 text-center">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">
+                            Season 2025
+                        </span>
+                        <span className="text-white ml-4">Archive</span>
+                    </h1>
+                </FadeIn>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Placeholder Card 1 */}
