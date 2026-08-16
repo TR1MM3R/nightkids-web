@@ -7,7 +7,7 @@
     },
     "Home": {
         "Hero": {
-            "subtitle": "Street Racing Team & Car Culture"
+            "subtitle": "ᴛᴏ ᴛʜᴇ ʜɪʟʟs ᴀɴᴅ ʙᴀᴄᴋ"
         },
         "BentoGrid": {
             "videoPlaceholder": "[ Video Placeholder ]",
@@ -22,6 +22,16 @@
         },
         "Footer": {
             "copyright": "© 2026 Nightkids"
+        },
+        "Instagram": {
+            "title": "On Our Radar",
+            "subtitle": "Follow @nightkids2.0 for real-time updates",
+            "followBtn": "Follow on Instagram",
+            "photoPlaceholder": "[ IG Photo ]"
+        },
+        "Partners": {
+            "title": "Partners & Collabs",
+            "subtitle": "The brands that support our vision"
         }
     },
     "Events": {
@@ -31,7 +41,12 @@
         "midnightRun": "Midnight Run Vol. 3",
         "driftPractice": "Drift Practice #04",
         "tougeBattle": "Touge Battle: Red vs Blue",
-        "behindScenes": "Behind the Scenes"
+        "behindScenes": "Behind the Scenes",
+        "upcomingMeet": "Upcoming Meet",
+        "upcomingMeetTitle": "NightKids Turin Car Meet",
+        "upcomingMeetDate": "TBA",
+        "upcomingMeetLocation": "Porte di Moncalieri, Turin",
+        "upcomingMeetDesc": "Get ready for the next official car meet. Cars, bikes, passion, and street culture. Follow our IG for updates."
     },
     "About": {
         "photoPlaceholder": "[ Team Portrait ]",

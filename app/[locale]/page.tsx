@@ -1,6 +1,9 @@
 import Header from "@/components/Header";
 import BentoGrid from "@/components/BentoGrid";
 import FadeIn from "@/components/FadeIn";
+import ParallaxText from "@/components/ParallaxText";
+import InstagramFeed from "@/components/InstagramFeed";
+import Partners from "@/components/Partners";
 import { useTranslations } from 'next-intl';
 
 export default function Home() {
@@ -31,14 +34,20 @@ export default function Home() {
         </div>
       </section>
 
+      <ParallaxText baseVelocity={-5}>NIGHTKIDS • TOUGE • STREET RACING • DRIFT • CAR CULTURE •</ParallaxText>
+      <ParallaxText baseVelocity={5}>NO LIVES MATTER • MOUNT AKINA • RED SUNS •</ParallaxText>
+
       <FadeIn delay={0.3}>
         <BentoGrid />
       </FadeIn>
 
-      {/* Footer spacer for now */}
-      <section className="py-10 text-center text-neutral-600 text-sm uppercase tracking-widest">
-        {t('Footer.copyright')}
-      </section>
+      <FadeIn delay={0.2}>
+        <InstagramFeed />
+      </FadeIn>
+
+      <FadeIn delay={0.2}>
+        <Partners />
+      </FadeIn>
     </main>
   );
 }

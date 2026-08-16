@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
 import { useTranslations } from 'next-intl';
+import SubscribeForm from "@/components/SubscribeForm";
 
 export default function ShopPage() {
     const t = useTranslations('Shop');
@@ -32,16 +33,10 @@ export default function ShopPage() {
                     </p>
 
                     {/* Newsletter Form */}
-                    <div className="flex flex-col md:flex-row gap-4 w-full">
-                        <input
-                            type="email"
-                            placeholder={t('emailPlaceholder')}
-                            className="flex-grow bg-neutral-900 border border-neutral-800 text-white px-6 py-4 rounded-lg focus:outline-none focus:border-red-600 transition-colors uppercase tracking-widest placeholder:text-neutral-600"
-                        />
-                        <button className="bg-white text-black font-bold uppercase tracking-widest px-8 py-4 rounded-lg hover:bg-neutral-200 transition-colors">
-                            {t('notifyMe')}
-                        </button>
-                    </div>
+                    <SubscribeForm 
+                        emailPlaceholder={t('emailPlaceholder')} 
+                        notifyMeText={t('notifyMe')} 
+                    />
                 </FadeIn>
             </section>
         </main>

@@ -7,7 +7,7 @@
     },
     "Home": {
         "Hero": {
-            "subtitle": "Street Racing Team & Car Culture"
+            "subtitle": "ᴛᴏ ᴛʜᴇ ʜɪʟʟs ᴀɴᴅ ʙᴀᴄᴋ"
         },
         "BentoGrid": {
             "videoPlaceholder": "[ Video Placeholder ]",
@@ -22,6 +22,16 @@
         },
         "Footer": {
             "copyright": "© 2026 Nightkids"
+        },
+        "Instagram": {
+            "title": "Sul Nostro Radar",
+            "subtitle": "Segui @nightkids2.0 per aggiornamenti in tempo reale",
+            "followBtn": "Seguici su Instagram",
+            "photoPlaceholder": "[ Foto IG ]"
+        },
+        "Partners": {
+            "title": "Partners & Collaborazioni",
+            "subtitle": "Le realtà che supportano la nostra visione"
         }
     },
     "Events": {
@@ -31,7 +41,12 @@
         "midnightRun": "Midnight Run Vol. 3",
         "driftPractice": "Drift Practice #04",
         "tougeBattle": "Touge Battle: Red vs Blue",
-        "behindScenes": "Dietro le Quinte"
+        "behindScenes": "Dietro le Quinte",
+        "upcomingMeet": "Prossimo Raduno",
+        "upcomingMeetTitle": "NightKids Turin Car Meet",
+        "upcomingMeetDate": "Data da definire",
+        "upcomingMeetLocation": "Porte di Moncalieri, Torino",
+        "upcomingMeetDesc": "Preparati per il prossimo raduno ufficiale. Auto, moto, passione e cultura street. Segui il nostro IG per aggiornamenti."
     },
     "About": {
         "photoPlaceholder": "[ Ritratto Team ]",
