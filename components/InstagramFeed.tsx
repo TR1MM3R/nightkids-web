@@ -3,6 +3,17 @@ import { useTranslations } from 'next-intl';
 export default function InstagramFeed() {
     const t = useTranslations('Home.Instagram');
 
+    const igPosts = [
+        { id: 1, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 2, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 3, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 4, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 5, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 6, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 7, link: "https://www.instagram.com/nightkids2.0/" },
+        { id: 8, link: "https://www.instagram.com/nightkids2.0/" },
+    ];
+
     return (
         <section className="container mx-auto px-4 py-20">
             <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-6">
@@ -25,16 +36,16 @@ export default function InstagramFeed() {
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                {igPosts.map((post) => (
                     <a
-                        key={item}
-                        href="https://www.instagram.com/nightkids2.0/"
+                        key={post.id}
+                        href={post.link}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="group relative aspect-square bg-neutral-900 overflow-hidden rounded-xl block border border-white/5 hover:border-pink-500/50 transition-colors"
                     >
                         <div className="absolute inset-0 flex items-center justify-center bg-neutral-800 group-hover:scale-110 transition-transform duration-700">
-                            <span className="text-neutral-600 font-bold text-xs uppercase tracking-widest">{t('photoPlaceholder')} {item}</span>
+                            <span className="text-neutral-600 font-bold text-xs uppercase tracking-widest">{t('photoPlaceholder')} {post.id}</span>
                         </div>
                         {/* Overlay */}
                         <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
