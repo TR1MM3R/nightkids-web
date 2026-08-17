@@ -32,6 +32,8 @@ export default async function EventsPage() {
             if (fetchedTitle) titleStr = fetchedTitle;
         } catch (e) {
             console.error("Failed to fetch from Redis", e);
+        } finally {
+            redis.quit();
         }
     }
 

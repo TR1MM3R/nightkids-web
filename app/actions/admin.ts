@@ -39,6 +39,8 @@ export async function saveEventData(prevState: any, formData: FormData) {
     } catch (error) {
         console.error("[KV EXCEPTION]", error);
         return { message: "Errore durante il salvataggio sul database.", success: false };
+    } finally {
+        redis.quit();
     }
 }
 
