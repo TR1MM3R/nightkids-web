@@ -9,6 +9,41 @@ export default function EventsPage() {
         <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
             <Header />
 
+            {/* Structured Data for SEO */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "Event",
+                        "name": t('upcomingMeetTitle'),
+                        "startDate": "2026-08-28T22:00:00+02:00",
+                        "endDate": "2026-08-29T02:00:00+02:00",
+                        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                        "eventStatus": "https://schema.org/EventScheduled",
+                        "location": {
+                            "@type": "Place",
+                            "name": "Porte di Moncalieri",
+                            "address": {
+                                "@type": "PostalAddress",
+                                "addressLocality": "Moncalieri",
+                                "addressRegion": "Torino",
+                                "addressCountry": "IT"
+                            }
+                        },
+                        "image": [
+                            "https://www.instagram.com/nightkids2.0/profilepic"
+                        ],
+                        "description": t('upcomingMeetDesc'),
+                        "organizer": {
+                            "@type": "Organization",
+                            "name": "NightKids 2.0",
+                            "url": "https://www.instagram.com/nightkids2.0/"
+                        }
+                    })
+                }}
+            />
+
             <section className="container mx-auto px-4 py-20 mt-10">
                 <FadeIn>
                     <h1 className="text-4xl md:text-6xl font-black uppercase italic tracking-tighter mb-12 text-center">

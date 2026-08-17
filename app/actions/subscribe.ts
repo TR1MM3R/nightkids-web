@@ -7,12 +7,34 @@ export async function subscribeAction(prevState: any, formData: FormData) {
         return { message: "Invalid email address", success: false };
     }
 
-    // In a real application, you would save this email to your database
-    // or send it to an external service like Mailchimp or Resend.
-    // For now, we simulate a successful API request with a small delay.
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // If environment variables are missing, fallback to console (useful for local dev without keys)
+    if (!process.env.RESEND_API_KEY || !process.env.RESEND_AUDIENCE_ID) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        console.log(`[DEV MODE] Newsletter fallback: ${email}`);
+        return { message: "Subscription successful (Dev Mode)", success: true };
+    }
 
-    console.log(`[SUBSCRIPTION SUCCESS] Added email: ${email}`);
+    try {
+        const res = await fetch(`https://api.resend.com/audiences/${process.env.RESEND_AUDIENCE_ID}/contacts`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                unsubscribed: false
+            })
+        });
 
-    return { message: "Subscription successful!", success: true };
+        if (!res.ok) {
+            console.error("[RESEND ERROR]", await res.text());
+            return { message: "Error saving subscription", success: false };
+        }
+
+        return { message: "Subscription successful!", success: true };
+    } catch (error) {
+        console.error("[SUBSCRIPTION EXCEPTION]", error);
+        return { message: "Internal server error", success: false };
+    }
 }

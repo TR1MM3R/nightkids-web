@@ -4,6 +4,7 @@ import FadeIn from "@/components/FadeIn";
 import ParallaxText from "@/components/ParallaxText";
 import InstagramFeed from "@/components/InstagramFeed";
 import Partners from "@/components/Partners";
+import Countdown from "@/components/Countdown";
 import { useTranslations } from 'next-intl';
 
 export default function Home() {
@@ -40,6 +41,8 @@ export default function Home() {
       <FadeIn delay={0.3}>
         <BentoGrid />
       </FadeIn>
+
+      <Countdown />
 
       <FadeIn delay={0.2}>
         <InstagramFeed />
