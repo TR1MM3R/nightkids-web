@@ -29,9 +29,9 @@ export async function saveEventData(prevState: any, formData: FormData) {
     }
 
     try {
-        await redis.set('event_title', title);
-        await redis.set('event_location', location);
-        await redis.set('event_date', date);
+        await redis.set('nightkids_event_title', title);
+        await redis.set('nightkids_event_location', location);
+        await redis.set('nightkids_event_date', date);
 
         // Revalidate the home page so the new countdown date shows up instantly
         revalidatePath('/');
