@@ -20,6 +20,8 @@ export const metadata: Metadata = {
 };
 
 import Footer from "@/components/Footer";
+import WhatsAppCTA from "@/components/WhatsAppCTA";
+import { Analytics } from "@vercel/analytics/react";
 
 export default async function RootLayout({
   children,
@@ -43,6 +45,8 @@ export default async function RootLayout({
             {children}
           </div>
           <Footer />
+          <WhatsAppCTA />
+          <Analytics />
         </NextIntlClientProvider>
       </body>
     </html>
