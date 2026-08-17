@@ -24,9 +24,9 @@ export default async function Home() {
 
   if (redis) {
       try {
-          const fetchedDate = await redis.get<string>('nightkids_event_date');
-          const fetchedLoc = await redis.get<string>('nightkids_event_location');
-          const fetchedTitle = await redis.get<string>('nightkids_event_title');
+          const fetchedDate = await redis.get('nightkids_event_date');
+          const fetchedLoc = await redis.get('nightkids_event_location');
+          const fetchedTitle = await redis.get('nightkids_event_title');
 
           if (fetchedDate) targetDateStr = fetchedDate;
           if (fetchedLoc) locationStr = fetchedLoc;
