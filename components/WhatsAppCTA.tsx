@@ -39,7 +39,7 @@ export default function WhatsAppCTA() {
 
                     {/* Button */}
                     <a
-                        href="https://wa.me/1234567890" // User should replace with actual group/number link
+                        href="https://chat.whatsapp.com/H42QGUonYSlGM9f0XJ5xVv"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-[0_0_20px_rgba(37,211,102,0.4)] hover:scale-110 hover:shadow-[0_0_30px_rgba(37,211,102,0.6)] transition-all duration-300 relative"
