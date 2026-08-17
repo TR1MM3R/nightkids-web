@@ -15,11 +15,13 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
     const [deletingUrls, setDeletingUrls] = useState<string[]>([]);
     
     const [isUploadingBlob, setIsUploadingBlob] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [blobMessage, setBlobMessage] = useState({ text: "", success: false });
 
     const handleClientUpload = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setIsUploadingBlob(true);
+        setUploadProgress(0);
         setBlobMessage({ text: "", success: false });
 
         const fileInput = document.getElementById("fileInput") as HTMLInputElement;
@@ -35,11 +37,15 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
             const newBlob = await upload(`nightkids/gallery/${file.name}`, file, {
                 access: 'public',
                 handleUploadUrl: '/api/upload',
+                onUploadProgress: (progressEvent) => {
+                    setUploadProgress(Math.round((progressEvent.loaded / progressEvent.total) * 100));
+                }
             });
 
             setPhotos([{ url: newBlob.url }, ...photos]);
             setBlobMessage({ text: "Foto caricata con successo!", success: true });
             fileInput.value = ""; // reset
+            setUploadProgress(0);
         } catch (error: any) {
             console.error(error);
             setBlobMessage({ text: `Errore: ${error.message || "sconosciuto"}`, success: false });
@@ -148,9 +154,9 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
                             <button 
                                 type="submit" 
                                 disabled={isUploadingBlob}
-                                className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-colors disabled:opacity-50 text-sm whitespace-nowrap"
+                                className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-colors disabled:opacity-50 text-sm whitespace-nowrap min-w-[140px]"
                             >
-                                {isUploadingBlob ? "Caricamento..." : "Upload"}
+                                {isUploadingBlob ? `CARICAMENTO ${uploadProgress}%` : "Upload"}
                             </button>
                         </div>
                         {blobMessage.text && (
