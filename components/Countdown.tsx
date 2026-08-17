@@ -3,10 +3,18 @@
 import { useState, useEffect } from 'react';
 import FadeIn from './FadeIn';
 
-export default function Countdown() {
-    // Target date for the next meet (example: end of current month, Friday night 22:00)
-    // We set it to a fixed date for now. User can update this.
-    const targetDate = new Date("2026-08-28T22:00:00").getTime();
+interface CountdownProps {
+    targetDateStr?: string;
+    locationStr?: string;
+    titleStr?: string;
+}
+
+export default function Countdown({ 
+    targetDateStr = "2026-08-28T22:00:00", 
+    locationStr = "Porte di Moncalieri, Torino", 
+    titleStr = "Midnight Run" 
+}: CountdownProps) {
+    const targetDate = new Date(targetDateStr).getTime();
     
     const [timeLeft, setTimeLeft] = useState({
         days: 0,
@@ -52,10 +60,10 @@ export default function Countdown() {
                                 Prossimo Raduno Ufficiale
                             </span>
                             <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
-                                Midnight Run
+                                {titleStr}
                             </h2>
                             <p className="text-gray-400 font-light mt-2 uppercase tracking-widest text-sm">
-                                Porte di Moncalieri, Torino
+                                {locationStr}
                             </p>
                             <a href="/it/events" className="inline-block mt-6 px-6 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform duration-300">
                                 Maggiori Info

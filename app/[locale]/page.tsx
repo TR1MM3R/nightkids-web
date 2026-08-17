@@ -5,10 +5,39 @@ import ParallaxText from "@/components/ParallaxText";
 import InstagramFeed from "@/components/InstagramFeed";
 import Partners from "@/components/Partners";
 import Countdown from "@/components/Countdown";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import { Redis } from '@upstash/redis';
 
-export default function Home() {
-  const t = useTranslations('Home');
+// Initialize Redis safely
+const getRedis = () => {
+    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) return null;
+    return new Redis({
+        url: process.env.KV_REST_API_URL,
+        token: process.env.KV_REST_API_TOKEN,
+    });
+};
+
+export default async function Home() {
+  const t = await getTranslations('Home');
+  const redis = getRedis();
+
+  let targetDateStr = "2026-08-28T22:00:00";
+  let locationStr = "Porte di Moncalieri, Torino";
+  let titleStr = "Midnight Run";
+
+  if (redis) {
+      try {
+          const fetchedDate = await redis.get<string>('event_date');
+          const fetchedLoc = await redis.get<string>('event_location');
+          const fetchedTitle = await redis.get<string>('event_title');
+
+          if (fetchedDate) targetDateStr = fetchedDate;
+          if (fetchedLoc) locationStr = fetchedLoc;
+          if (fetchedTitle) titleStr = fetchedTitle;
+      } catch (e) {
+          console.error("Failed to fetch from Redis", e);
+      }
+  }
 
   return (
     <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
@@ -42,7 +71,11 @@ export default function Home() {
         <BentoGrid />
       </FadeIn>
 
-      <Countdown />
+      <Countdown 
+          targetDateStr={targetDateStr}
+          locationStr={locationStr}
+          titleStr={titleStr}
+      />
 
       <FadeIn delay={0.2}>
         <InstagramFeed />
