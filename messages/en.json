@@ -46,7 +46,10 @@
         "upcomingMeetTitle": "NightKids Turin Car Meet",
         "upcomingMeetDate": "TBA",
         "upcomingMeetLocation": "Porte di Moncalieri, Turin",
-        "upcomingMeetDesc": "Get ready for the next official car meet. Cars, bikes, passion, and street culture. Follow our IG for updates."
+        "upcomingMeetDesc": "Get ready for the next official car meet. Cars, bikes, passion, and street culture. Follow our IG for updates.",
+        "when": "When",
+        "where": "Where",
+        "infoIg": "IG Info"
     },
     "About": {
         "photoPlaceholder": "[ Team Portrait ]",

@@ -102,15 +102,15 @@ export default async function EventsPage() {
                                 </div>
                                 <div className="flex-shrink-0 flex flex-col gap-4 text-left w-full md:w-auto bg-black/40 p-6 rounded-2xl border border-white/5">
                                     <div>
-                                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">When</p>
+                                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('when')}</p>
                                         <p className="font-bold text-white uppercase">{targetDateStr}</p>
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Where</p>
+                                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('where')}</p>
                                         <p className="font-bold text-white uppercase">{locationStr}</p>
                                     </div>
                                     <a href="https://www.instagram.com/nightkids2.0/" target="_blank" rel="noopener noreferrer" className="mt-4 block text-center w-full bg-red-600 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-red-700 transition-colors">
-                                        Info su IG
+                                        {t('infoIg')}
                                     </a>
                                 </div>
                             </div>

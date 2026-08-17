@@ -46,7 +46,10 @@
         "upcomingMeetTitle": "NightKids Turin Car Meet",
         "upcomingMeetDate": "Data da definire",
         "upcomingMeetLocation": "Porte di Moncalieri, Torino",
-        "upcomingMeetDesc": "Preparati per il prossimo raduno ufficiale. Auto, moto, passione e cultura street. Segui il nostro IG per aggiornamenti."
+        "upcomingMeetDesc": "Preparati per il prossimo raduno ufficiale. Auto, moto, passione e cultura street. Segui il nostro IG per aggiornamenti.",
+        "when": "Quando",
+        "where": "Dove",
+        "infoIg": "Info su IG"
     },
     "About": {
         "photoPlaceholder": "[ Ritratto Team ]",
