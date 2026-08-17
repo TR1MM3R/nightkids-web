@@ -113,18 +113,18 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
                     
                     <form action={blobFormAction} className="mb-6">
                         <label className="block text-xs uppercase tracking-widest text-gray-500 font-bold mb-2">Carica Nuova Foto</label>
-                        <div className="flex gap-2">
+                        <div className="flex flex-col sm:flex-row gap-2 w-full">
                             <input 
                                 type="file" 
                                 name="file" 
                                 required
                                 accept="image/*"
-                                className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-white file:text-black hover:file:bg-gray-200"
+                                className="flex-1 w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-white file:text-black hover:file:bg-gray-200"
                             />
                             <button 
                                 type="submit" 
                                 disabled={isBlobPending}
-                                className="px-6 bg-blue-600 text-white font-bold uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-colors disabled:opacity-50 text-sm"
+                                className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-colors disabled:opacity-50 text-sm whitespace-nowrap"
                             >
                                 {isBlobPending ? "..." : "Upload"}
                             </button>

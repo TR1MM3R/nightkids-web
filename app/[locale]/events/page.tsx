@@ -1,9 +1,39 @@
 import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
+import Redis from 'ioredis';
 
-export default function EventsPage() {
-    const t = useTranslations('Events');
+const getRedis = () => {
+    const redisUrl = process.env.KV_REST_API_REDIS_URL || process.env.REDIS_URL;
+    if (!redisUrl) return null;
+    return new Redis(redisUrl);
+};
+
+export default async function EventsPage() {
+    const t = await getTranslations('Events');
+    const redis = getRedis();
+
+    let targetDateStr = t('upcomingMeetDate'); // fallback
+    let locationStr = t('upcomingMeetLocation'); // fallback
+    let titleStr = t('upcomingMeetTitle'); // fallback
+
+    if (redis) {
+        try {
+            const fetchedDate = await redis.get('nightkids_event_date');
+            const fetchedLoc = await redis.get('nightkids_event_location');
+            const fetchedTitle = await redis.get('nightkids_event_title');
+
+            if (fetchedDate) {
+                // Formattiamo la data per leggerla meglio (es: 28/08/2026 22:00)
+                const d = new Date(fetchedDate);
+                targetDateStr = d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+            }
+            if (fetchedLoc) locationStr = fetchedLoc;
+            if (fetchedTitle) titleStr = fetchedTitle;
+        } catch (e) {
+            console.error("Failed to fetch from Redis", e);
+        }
+    }
 
     return (
         <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
@@ -16,18 +46,17 @@ export default function EventsPage() {
                     __html: JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "Event",
-                        "name": t('upcomingMeetTitle'),
+                        "name": titleStr,
                         "startDate": "2026-08-28T22:00:00+02:00",
                         "endDate": "2026-08-29T02:00:00+02:00",
                         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
                         "eventStatus": "https://schema.org/EventScheduled",
                         "location": {
                             "@type": "Place",
-                            "name": "Porte di Moncalieri",
+                            "name": locationStr,
                             "address": {
                                 "@type": "PostalAddress",
-                                "addressLocality": "Moncalieri",
-                                "addressRegion": "Torino",
+                                "addressLocality": "Torino",
                                 "addressCountry": "IT"
                             }
                         },
@@ -63,7 +92,7 @@ export default function EventsPage() {
                                         {t('upcomingMeet')}
                                     </span>
                                     <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter">
-                                        {t('upcomingMeetTitle')}
+                                        {titleStr}
                                     </h2>
                                     <p className="text-gray-400 font-light text-lg">
                                         {t('upcomingMeetDesc')}
@@ -72,11 +101,11 @@ export default function EventsPage() {
                                 <div className="flex-shrink-0 flex flex-col gap-4 text-left w-full md:w-auto bg-black/40 p-6 rounded-2xl border border-white/5">
                                     <div>
                                         <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">When</p>
-                                        <p className="font-bold text-white uppercase">{t('upcomingMeetDate')}</p>
+                                        <p className="font-bold text-white uppercase">{targetDateStr}</p>
                                     </div>
                                     <div>
                                         <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">Where</p>
-                                        <p className="font-bold text-white uppercase">{t('upcomingMeetLocation')}</p>
+                                        <p className="font-bold text-white uppercase">{locationStr}</p>
                                     </div>
                                     <a href="https://www.instagram.com/nightkids2.0/" target="_blank" rel="noopener noreferrer" className="mt-4 block text-center w-full bg-red-600 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-red-700 transition-colors">
                                         Info su IG
