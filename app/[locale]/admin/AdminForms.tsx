@@ -4,25 +4,49 @@ import { useActionState, useState, useEffect } from 'react';
 import { saveEventData, uploadGalleryPhoto, deleteGalleryPhoto } from '@/app/actions/admin';
 import FadeIn from '@/components/FadeIn';
 
+import { upload } from '@vercel/blob/client';
+
 const initialEventState = { message: "", success: false };
-const initialBlobState = { message: "", success: false, url: "" };
 
 export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) {
     const [eventState, eventFormAction, isEventPending] = useActionState(saveEventData, initialEventState);
-    const [blobState, blobFormAction, isBlobPending] = useActionState(uploadGalleryPhoto, initialBlobState);
     
     const [photos, setPhotos] = useState(initialPhotos);
     const [deletingUrls, setDeletingUrls] = useState<string[]>([]);
     
-    // Update photos list when a new upload succeeds
-    useEffect(() => {
-        if (blobState.success && blobState.url) {
-            setPhotos(prev => {
-                if (prev.some(p => p.url === blobState.url)) return prev;
-                return [{ url: blobState.url }, ...prev];
-            });
+    const [isUploadingBlob, setIsUploadingBlob] = useState(false);
+    const [blobMessage, setBlobMessage] = useState({ text: "", success: false });
+
+    const handleClientUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsUploadingBlob(true);
+        setBlobMessage({ text: "", success: false });
+
+        const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+        const file = fileInput.files?.[0];
+
+        if (!file) {
+            setBlobMessage({ text: "Nessun file selezionato.", success: false });
+            setIsUploadingBlob(false);
+            return;
         }
-    }, [blobState]);
+
+        try {
+            const newBlob = await upload(`nightkids/gallery/${file.name}`, file, {
+                access: 'public',
+                handleUploadUrl: '/api/upload',
+            });
+
+            setPhotos([{ url: newBlob.url }, ...photos]);
+            setBlobMessage({ text: "Foto caricata con successo!", success: true });
+            fileInput.value = ""; // reset
+        } catch (error: any) {
+            console.error(error);
+            setBlobMessage({ text: `Errore: ${error.message || "sconosciuto"}`, success: false });
+        } finally {
+            setIsUploadingBlob(false);
+        }
+    };
 
     const handleDelete = async (url: string) => {
         if (!confirm("Sei sicuro di voler eliminare questa foto?")) return;
@@ -111,27 +135,27 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
                         <h2 className="text-xl font-bold uppercase tracking-widest text-white">Galleria (Vercel Blob)</h2>
                     </div>
                     
-                    <form action={blobFormAction} className="mb-6">
+                    <form onSubmit={handleClientUpload} className="mb-6">
                         <label className="block text-xs uppercase tracking-widest text-gray-500 font-bold mb-2">Carica Nuova Foto</label>
                         <div className="flex flex-col sm:flex-row gap-2 w-full">
                             <input 
                                 type="file" 
-                                name="file" 
+                                id="fileInput"
                                 required
                                 accept="image/*"
                                 className="flex-1 w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors text-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:uppercase file:tracking-widest file:bg-white file:text-black hover:file:bg-gray-200"
                             />
                             <button 
                                 type="submit" 
-                                disabled={isBlobPending}
+                                disabled={isUploadingBlob}
                                 className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white font-bold uppercase tracking-widest rounded-xl hover:bg-blue-500 transition-colors disabled:opacity-50 text-sm whitespace-nowrap"
                             >
-                                {isBlobPending ? "..." : "Upload"}
+                                {isUploadingBlob ? "Caricamento..." : "Upload"}
                             </button>
                         </div>
-                        {blobState?.message && (
-                            <div className={`p-3 rounded-xl text-xs font-bold uppercase tracking-widest mt-2 ${blobState.success ? 'text-green-500' : 'text-red-500'}`}>
-                                {blobState.message}
+                        {blobMessage.text && (
+                            <div className={`p-3 rounded-xl text-xs font-bold uppercase tracking-widest mt-2 ${blobMessage.success ? 'text-green-500' : 'text-red-500'}`}>
+                                {blobMessage.text}
                             </div>
                         )}
                     </form>

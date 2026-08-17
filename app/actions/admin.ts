@@ -60,9 +60,9 @@ export async function uploadGalleryPhoto(prevState: any, formData: FormData) {
         
         revalidatePath('/[locale]/admin', 'page');
         return { message: "Foto caricata con successo!", success: true, url: blob.url };
-    } catch (error) {
+    } catch (error: any) {
         console.error("[BLOB UPLOAD EXCEPTION]", error);
-        return { message: "Errore durante il caricamento della foto.", success: false };
+        return { message: `Errore: ${error?.message || "sconosciuto"}`, success: false };
     }
 }
 
