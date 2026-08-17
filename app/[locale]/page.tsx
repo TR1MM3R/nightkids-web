@@ -5,8 +5,10 @@ import ParallaxText from "@/components/ParallaxText";
 import InstagramFeed from "@/components/InstagramFeed";
 import Partners from "@/components/Partners";
 import Countdown from "@/components/Countdown";
+import Gallery from "@/components/Gallery";
 import { getTranslations } from 'next-intl/server';
 import Redis from 'ioredis';
+import { getGalleryPhotos } from "@/app/actions/admin";
 
 const getRedis = () => {
     const redisUrl = process.env.KV_REST_API_REDIS_URL || process.env.REDIS_URL;
@@ -21,6 +23,8 @@ export default async function Home() {
   let targetDateStr = "2026-08-28T22:00:00";
   let locationStr = "Porte di Moncalieri, Torino";
   let titleStr = "Midnight Run";
+  
+  let photos: any[] = [];
 
   if (redis) {
       try {
@@ -36,6 +40,12 @@ export default async function Home() {
       } finally {
           redis.quit();
       }
+  }
+
+  try {
+      photos = await getGalleryPhotos();
+  } catch (e) {
+      console.error("Failed to fetch gallery photos", e);
   }
 
   return (
@@ -75,6 +85,10 @@ export default async function Home() {
           locationStr={locationStr}
           titleStr={titleStr}
       />
+
+      <FadeIn delay={0.2}>
+        <Gallery photos={photos} />
+      </FadeIn>
 
       <FadeIn delay={0.2}>
         <InstagramFeed />
