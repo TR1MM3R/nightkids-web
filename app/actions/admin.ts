@@ -1,18 +1,15 @@
 "use server";
 
-import { Redis } from '@upstash/redis';
+import Redis from 'ioredis';
 import { revalidatePath } from 'next/cache';
 
-// Initialize Redis. If keys are missing (local dev), this will mock silently or throw depending on how we handle it.
-// To avoid crashing if env vars are missing, we use try/catch in the action.
 const getRedis = () => {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
+    // Check for the specific variable from the screenshot, or standard REDIS_URL
+    const redisUrl = process.env.KV_REST_API_REDIS_URL || process.env.REDIS_URL;
+    if (!redisUrl) {
         return null;
     }
-    return new Redis({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
+    return new Redis(redisUrl);
 };
 
 export async function saveEventData(prevState: any, formData: FormData) {

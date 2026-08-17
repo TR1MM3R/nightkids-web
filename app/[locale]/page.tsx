@@ -6,15 +6,12 @@ import InstagramFeed from "@/components/InstagramFeed";
 import Partners from "@/components/Partners";
 import Countdown from "@/components/Countdown";
 import { getTranslations } from 'next-intl/server';
-import { Redis } from '@upstash/redis';
+import Redis from 'ioredis';
 
-// Initialize Redis safely
 const getRedis = () => {
-    if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) return null;
-    return new Redis({
-        url: process.env.KV_REST_API_URL,
-        token: process.env.KV_REST_API_TOKEN,
-    });
+    const redisUrl = process.env.KV_REST_API_REDIS_URL || process.env.REDIS_URL;
+    if (!redisUrl) return null;
+    return new Redis(redisUrl);
 };
 
 export default async function Home() {

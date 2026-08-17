@@ -13,6 +13,7 @@
     "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.8.0",
     "framer-motion": "^12.26.2",
+    "ioredis": "^6.0.0",
     "next": "16.1.2",
     "next-intl": "^4.7.0",
     "react": "19.2.3",
