@@ -79,11 +79,14 @@ export async function deleteGalleryPhoto(url: string) {
 
 export async function getGalleryPhotos() {
     try {
-        // Only fetch blobs with our specific prefix
         const { blobs } = await list({ prefix: 'nightkids/gallery/' });
-        return blobs;
+        return blobs.sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
     } catch (error) {
-        console.error("[BLOB LIST EXCEPTION]", error);
+        console.error(error);
         return [];
     }
+}
+
+export async function revalidateGallery() {
+    revalidatePath('/', 'layout');
 }

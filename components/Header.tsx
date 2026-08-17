@@ -11,17 +11,11 @@ export default function Header() {
     const pathname = usePathname();
     const router = useRouter();
 
-    const toggleLanguage = () => {
-        if (pathname.startsWith('/en')) {
-            router.push(pathname.replace('/en', '/it'));
-        } else if (pathname.startsWith('/it')) {
-            router.push(pathname.replace('/it', '/en'));
-        } else {
-            router.push(`/en${pathname}`);
-        }
-    };
-
     const currentLang = pathname.startsWith('/en') ? 'EN' : 'IT';
+    const newLocale = currentLang === 'EN' ? 'it' : 'en';
+    const newPath = pathname.startsWith('/en') || pathname.startsWith('/it') 
+        ? pathname.replace(/^\/(en|it)/, `/${newLocale}`) 
+        : `/${newLocale}${pathname}`;
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -56,16 +50,16 @@ export default function Header() {
                         {t('shop')}
                     </Link>
 
-                    <button onClick={toggleLanguage} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
+                    <a href={newPath} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
                         {currentLang}
-                    </button>
+                    </a>
                 </nav>
 
                 {/* Mobile Menu Button */}
                 <div className="md:hidden flex items-center gap-4">
-                    <button onClick={toggleLanguage} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
+                    <a href={newPath} className="bg-white/10 px-3 py-1 rounded text-xs font-bold text-white uppercase hover:bg-white/20 transition">
                         {currentLang}
-                    </button>
+                    </a>
 
                     <button
                         className="text-white focus:outline-none"

@@ -66,5 +66,13 @@
         "description": "Official Nightkids Merch.\nGet early access to the new collection.",
         "emailPlaceholder": "ENTER YOUR EMAIL",
         "notifyMe": "Notify Me"
+    },
+    "Countdown": {
+        "upcomingMeet": "Next Official Meet",
+        "moreInfo": "More Info",
+        "days": "Days",
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
     }
 }

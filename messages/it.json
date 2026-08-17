@@ -66,5 +66,13 @@
         "description": "Merch Ufficiale Nightkids.\nOttieni accesso anticipato alla nuova collezione.",
         "emailPlaceholder": "INSERISCI LA TUA EMAIL",
         "notifyMe": "Avvisami"
+    },
+    "Countdown": {
+        "upcomingMeet": "Prossimo Raduno Ufficiale",
+        "moreInfo": "Maggiori Info",
+        "days": "Giorni",
+        "hours": "Ore",
+        "minutes": "Minuti",
+        "seconds": "Secondi"
     }
 }

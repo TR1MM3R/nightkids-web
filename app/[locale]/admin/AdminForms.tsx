@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState, useEffect } from 'react';
-import { saveEventData, uploadGalleryPhoto, deleteGalleryPhoto } from '@/app/actions/admin';
+import { saveEventData, deleteGalleryPhoto, revalidateGallery } from '@/app/actions/admin';
 import FadeIn from '@/components/FadeIn';
 
 import { upload } from '@vercel/blob/client';
@@ -46,6 +46,9 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
             setBlobMessage({ text: "Foto caricata con successo!", success: true });
             fileInput.value = ""; // reset
             setUploadProgress(0);
+
+            // Invalidate the cache for the homepage so the gallery updates!
+            await revalidateGallery();
         } catch (error: any) {
             console.error(error);
             setBlobMessage({ text: `Errore: ${error.message || "sconosciuto"}`, success: false });
@@ -56,12 +59,17 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
 
     const handleDelete = async (url: string) => {
         if (!confirm("Sei sicuro di voler eliminare questa foto?")) return;
-        setDeletingUrls(prev => [...prev, url]);
         
-        const res = await deleteGalleryPhoto(url);
-        if (res.success) {
+        setDeletingUrls(prev => [...prev, url]);
+        const result = await deleteGalleryPhoto(url);
+        
+        if (result.success) {
             setPhotos(prev => prev.filter(p => p.url !== url));
+            await revalidateGallery();
+        } else {
+            alert(result.message);
         }
+        
         setDeletingUrls(prev => prev.filter(u => u !== url));
     };
 

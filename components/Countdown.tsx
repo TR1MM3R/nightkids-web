@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import FadeIn from './FadeIn';
+import { useTranslations } from 'next-intl';
 
 interface CountdownProps {
     targetDateStr?: string;
@@ -14,6 +15,7 @@ export default function Countdown({
     locationStr = "Porte di Moncalieri, Torino", 
     titleStr = "Midnight Run" 
 }: CountdownProps) {
+    const t = useTranslations('Countdown');
     const targetDate = new Date(targetDateStr).getTime();
     
     const [timeLeft, setTimeLeft] = useState({
@@ -57,7 +59,7 @@ export default function Countdown({
                     <div className="flex flex-col md:flex-row items-center justify-between gap-8 bg-neutral-900/60 border border-white/10 rounded-3xl p-8 md:p-12 backdrop-blur-sm">
                         <div className="flex-1 text-center md:text-left">
                             <span className="inline-block px-3 py-1 text-xs font-bold text-red-500 bg-red-500/10 rounded-full uppercase tracking-wider border border-red-500/20 mb-4">
-                                Prossimo Raduno Ufficiale
+                                {t('upcomingMeet')}
                             </span>
                             <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-white">
                                 {titleStr}
@@ -65,8 +67,8 @@ export default function Countdown({
                             <p className="text-gray-400 font-light mt-2 uppercase tracking-widest text-sm">
                                 {locationStr}
                             </p>
-                            <a href="/it/events" className="inline-block mt-6 px-6 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform duration-300">
-                                Maggiori Info
+                            <a href={`/events`} className="inline-block mt-6 px-6 py-3 bg-white text-black font-bold uppercase tracking-widest rounded-full hover:scale-105 transition-transform duration-300">
+                                {t('moreInfo')}
                             </a>
                         </div>
 
@@ -75,28 +77,28 @@ export default function Countdown({
                                 <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
                                     {String(timeLeft.days).padStart(2, '0')}
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">Giorni</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('days')}</div>
                             </div>
                             <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
                             <div className="flex flex-col items-center">
                                 <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
                                     {String(timeLeft.hours).padStart(2, '0')}
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">Ore</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('hours')}</div>
                             </div>
                             <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
                             <div className="flex flex-col items-center">
                                 <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
                                     {String(timeLeft.minutes).padStart(2, '0')}
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">Minuti</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('minutes')}</div>
                             </div>
                             <div className="hidden md:block text-4xl md:text-6xl font-black text-gray-700">:</div>
                             <div className="hidden md:flex flex-col items-center">
                                 <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
                                     {String(timeLeft.seconds).padStart(2, '0')}
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">Secondi</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('seconds')}</div>
                             </div>
                         </div>
                     </div>
