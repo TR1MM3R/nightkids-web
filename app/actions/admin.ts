@@ -41,3 +41,47 @@ export async function saveEventData(prevState: any, formData: FormData) {
         return { message: "Errore durante il salvataggio sul database.", success: false };
     }
 }
+
+import { put, del, list } from '@vercel/blob';
+
+export async function uploadGalleryPhoto(prevState: any, formData: FormData) {
+    const file = formData.get("file") as File;
+    
+    if (!file || file.size === 0) {
+        return { message: "Nessun file selezionato.", success: false };
+    }
+
+    try {
+        const blob = await put(`nightkids/gallery/${file.name}`, file, {
+            access: 'public',
+        });
+        
+        revalidatePath('/[locale]/admin', 'page');
+        return { message: "Foto caricata con successo!", success: true, url: blob.url };
+    } catch (error) {
+        console.error("[BLOB UPLOAD EXCEPTION]", error);
+        return { message: "Errore durante il caricamento della foto.", success: false };
+    }
+}
+
+export async function deleteGalleryPhoto(url: string) {
+    try {
+        await del(url);
+        revalidatePath('/[locale]/admin', 'page');
+        return { success: true };
+    } catch (error) {
+        console.error("[BLOB DELETE EXCEPTION]", error);
+        return { success: false };
+    }
+}
+
+export async function getGalleryPhotos() {
+    try {
+        // Only fetch blobs with our specific prefix
+        const { blobs } = await list({ prefix: 'nightkids/gallery/' });
+        return blobs;
+    } catch (error) {
+        console.error("[BLOB LIST EXCEPTION]", error);
+        return [];
+    }
+}
