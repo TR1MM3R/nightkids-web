@@ -1,14 +1,26 @@
 import FadeIn from '@/components/FadeIn';
-import { getGalleryPhotos, getPartners, getPastEvents } from '@/app/actions/admin';
+import {
+    getGalleryPhotos,
+    getPartners,
+    getPastEvents,
+    getRsvpCount,
+    getNewsletterSubscriberCount,
+    getAdminLog,
+} from '@/app/actions/admin';
 import AdminForms from './AdminForms';
+import AdminStats from './AdminStats';
+import AdminLog from './AdminLog';
 import PartnersManager from './PartnersManager';
 import PastEventsManager from './PastEventsManager';
 
 export default async function AdminDashboard() {
-    const [photos, partners, pastEvents] = await Promise.all([
+    const [photos, partners, pastEvents, rsvpCount, newsletterCount, adminLog] = await Promise.all([
         getGalleryPhotos(),
         getPartners(),
         getPastEvents(),
+        getRsvpCount(),
+        getNewsletterSubscriberCount(),
+        getAdminLog(),
     ]);
 
     return (
@@ -20,6 +32,10 @@ export default async function AdminDashboard() {
                 </div>
             </FadeIn>
 
+            <FadeIn delay={0.05}>
+                <AdminStats rsvpCount={rsvpCount} newsletterCount={newsletterCount} />
+            </FadeIn>
+
             <AdminForms initialPhotos={photos} />
 
             <FadeIn>
@@ -28,6 +44,10 @@ export default async function AdminDashboard() {
 
             <FadeIn>
                 <PastEventsManager initialEvents={pastEvents} />
+            </FadeIn>
+
+            <FadeIn>
+                <AdminLog entries={adminLog} />
             </FadeIn>
         </div>
     );

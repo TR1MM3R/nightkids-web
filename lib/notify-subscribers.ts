@@ -1,5 +1,30 @@
 import { SITE_URL } from "@/lib/site-config";
 
+type ResendContact = { email: string; unsubscribed: boolean };
+
+// Legge i contatti dell'audience Resend. Ritorna null se Resend non è
+// configurato o la chiamata fallisce (chi chiama decide il fallback).
+export async function getAudienceContacts(): Promise<ResendContact[] | null> {
+    const apiKey = process.env.RESEND_API_KEY;
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    if (!apiKey || !audienceId) return null;
+
+    try {
+        const res = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
+            headers: { Authorization: `Bearer ${apiKey}` },
+        });
+        if (!res.ok) {
+            console.error("[RESEND CONTACTS] Impossibile leggere i contatti:", await res.text());
+            return null;
+        }
+        const { data } = await res.json();
+        return data || [];
+    } catch (error) {
+        console.error("[RESEND CONTACTS EXCEPTION]", error);
+        return null;
+    }
+}
+
 // Avvisa via email gli iscritti alla newsletter (audience Resend) quando
 // l'admin imposta un nuovo raduno o cambia data. Best-effort: logga e si
 // ferma su qualunque errore, non deve mai far fallire il salvataggio
@@ -10,10 +35,9 @@ export async function notifySubscribersOfNewEvent(params: {
     location: string;
 }) {
     const apiKey = process.env.RESEND_API_KEY;
-    const audienceId = process.env.RESEND_AUDIENCE_ID;
     const fromEmail = process.env.RESEND_FROM_EMAIL;
 
-    if (!apiKey || !audienceId) {
+    if (!apiKey || !process.env.RESEND_AUDIENCE_ID) {
         console.log("[NOTIFY SUBSCRIBERS] Resend non configurato, notifica saltata.");
         return;
     }
@@ -25,18 +49,13 @@ export async function notifySubscribersOfNewEvent(params: {
     }
 
     try {
-        const contactsRes = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts`, {
-            headers: { Authorization: `Bearer ${apiKey}` },
-        });
-        if (!contactsRes.ok) {
-            console.error("[NOTIFY SUBSCRIBERS] Impossibile leggere i contatti Resend:", await contactsRes.text());
+        const contacts = await getAudienceContacts();
+        if (contacts === null) {
+            console.error("[NOTIFY SUBSCRIBERS] Impossibile leggere i contatti Resend.");
             return;
         }
 
-        const { data: contacts } = await contactsRes.json();
-        const recipients: string[] = (contacts || [])
-            .filter((c: any) => !c.unsubscribed && c.email)
-            .map((c: any) => c.email);
+        const recipients: string[] = contacts.filter((c) => !c.unsubscribed && c.email).map((c) => c.email);
 
         if (recipients.length === 0) {
             console.log("[NOTIFY SUBSCRIBERS] Nessun iscritto da notificare.");

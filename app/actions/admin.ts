@@ -3,8 +3,9 @@
 import Redis from 'ioredis';
 import { revalidatePath } from 'next/cache';
 import { parseRomeLocalDate } from '@/lib/event-date';
-import { notifySubscribersOfNewEvent } from '@/lib/notify-subscribers';
+import { notifySubscribersOfNewEvent, getAudienceContacts } from '@/lib/notify-subscribers';
 import { requireAdmin } from '@/lib/admin-auth';
+import { logAdminAction, getAdminLog as getAdminLogEntries } from '@/lib/admin-log';
 
 const getRedis = () => {
     // Check for the specific variable from the screenshot, or standard REDIS_URL
@@ -58,6 +59,9 @@ export async function saveEventData(prevState: any, formData: FormData) {
                   })
                 : '';
             await notifySubscribersOfNewEvent({ title, dateLabel, location });
+            await logAdminAction(`Nuovo raduno impostato: "${title}"`);
+        } else {
+            await logAdminAction(`Dettagli raduno aggiornati: "${title}"`);
         }
 
         // Revalidate the home page so the new countdown date shows up instantly
@@ -107,6 +111,45 @@ export async function incrementRsvpCount(): Promise<{ count: number }> {
     }
 }
 
+export async function resetRsvpCount(): Promise<{ success: boolean; message: string }> {
+    await requireAdmin();
+
+    const redis = getRedis();
+    if (!redis) return { success: false, message: "Database non configurato." };
+
+    try {
+        await redis.set('nightkids_event_rsvp_count', '0');
+        await logAdminAction('Contatore "Ci sarò" azzerato manualmente');
+        revalidatePath('/[locale]/events', 'page');
+        revalidatePath('/[locale]/admin', 'page');
+        return { success: true, message: "Contatore azzerato." };
+    } catch (error) {
+        console.error("[RSVP RESET EXCEPTION]", error);
+        return { success: false, message: "Errore durante l'azzeramento." };
+    } finally {
+        redis.quit();
+    }
+}
+
+// ---- Newsletter ----
+
+// Ritorna null se Resend non è configurato o la chiamata fallisce, così la UI
+// può mostrare "N/D" invece di 0 (che sembrerebbe "zero iscritti reali").
+export async function getNewsletterSubscriberCount(): Promise<number | null> {
+    await requireAdmin();
+
+    const contacts = await getAudienceContacts();
+    if (contacts === null) return null;
+    return contacts.filter((c) => !c.unsubscribed).length;
+}
+
+// ---- Changelog admin ----
+
+export async function getAdminLog() {
+    await requireAdmin();
+    return getAdminLogEntries();
+}
+
 import { del, list } from '@vercel/blob';
 
 export async function deleteGalleryPhoto(url: string) {
@@ -114,6 +157,7 @@ export async function deleteGalleryPhoto(url: string) {
 
     try {
         await del(url);
+        await logAdminAction('Foto rimossa dalla galleria');
         revalidatePath('/[locale]/admin', 'page');
         return { success: true, message: "Foto eliminata." };
     } catch (error) {
@@ -173,12 +217,37 @@ export async function addPartner(partner: { name: string; role: string; logoUrl:
         list.push({ id: Date.now().toString(), ...partner });
         await redis.set('nightkids_partners', JSON.stringify(list));
 
+        await logAdminAction(`Partner aggiunto: "${partner.name}"`);
         revalidatePath('/[locale]', 'page');
         revalidatePath('/[locale]/admin', 'page');
         return { success: true, message: "Partner aggiunto." };
     } catch (error) {
         console.error("[PARTNER ADD EXCEPTION]", error);
         return { success: false, message: "Errore durante il salvataggio." };
+    } finally {
+        redis.quit();
+    }
+}
+
+export async function updatePartner(id: string, partner: { name: string; role: string; logoUrl: string }) {
+    await requireAdmin();
+
+    const redis = getRedis();
+    if (!redis) return { success: false, message: "Database non configurato." };
+
+    try {
+        const raw = await redis.get('nightkids_partners');
+        const list: Partner[] = raw ? JSON.parse(raw) : DEFAULT_PARTNERS;
+        const updated = list.map((p) => (p.id === id ? { ...p, ...partner } : p));
+        await redis.set('nightkids_partners', JSON.stringify(updated));
+
+        await logAdminAction(`Partner modificato: "${partner.name}"`);
+        revalidatePath('/[locale]', 'page');
+        revalidatePath('/[locale]/admin', 'page');
+        return { success: true, message: "Partner aggiornato." };
+    } catch (error) {
+        console.error("[PARTNER UPDATE EXCEPTION]", error);
+        return { success: false, message: "Errore durante l'aggiornamento." };
     } finally {
         redis.quit();
     }
@@ -193,14 +262,43 @@ export async function deletePartner(id: string) {
     try {
         const raw = await redis.get('nightkids_partners');
         const list: Partner[] = raw ? JSON.parse(raw) : DEFAULT_PARTNERS;
+        const removed = list.find((p) => p.id === id);
         await redis.set('nightkids_partners', JSON.stringify(list.filter(p => p.id !== id)));
 
+        if (removed) await logAdminAction(`Partner rimosso: "${removed.name}"`);
         revalidatePath('/[locale]', 'page');
         revalidatePath('/[locale]/admin', 'page');
         return { success: true, message: "Partner rimosso." };
     } catch (error) {
         console.error("[PARTNER DELETE EXCEPTION]", error);
         return { success: false, message: "Errore durante la rimozione." };
+    } finally {
+        redis.quit();
+    }
+}
+
+export async function reorderPartners(orderedIds: string[]) {
+    await requireAdmin();
+
+    const redis = getRedis();
+    if (!redis) return { success: false, message: "Database non configurato." };
+
+    try {
+        const raw = await redis.get('nightkids_partners');
+        const list: Partner[] = raw ? JSON.parse(raw) : DEFAULT_PARTNERS;
+        const byId = new Map(list.map((p) => [p.id, p]));
+        const reordered = orderedIds.map((id) => byId.get(id)).filter((p): p is Partner => Boolean(p));
+        // Eventuali id non presenti nell'ordinamento ricevuto restano in coda,
+        // così non si perdono partner per un ordinamento incompleto.
+        const missing = list.filter((p) => !orderedIds.includes(p.id));
+        await redis.set('nightkids_partners', JSON.stringify([...reordered, ...missing]));
+
+        await logAdminAction('Ordine dei partner aggiornato');
+        revalidatePath('/[locale]', 'page');
+        return { success: true, message: "Ordine salvato." };
+    } catch (error) {
+        console.error("[PARTNERS REORDER EXCEPTION]", error);
+        return { success: false, message: "Errore durante il salvataggio dell'ordine." };
     } finally {
         redis.quit();
     }
@@ -245,12 +343,37 @@ export async function addPastEvent(event: { title: string; thumbnailUrl: string 
         list.unshift({ id: Date.now().toString(), ...event });
         await redis.set('nightkids_past_events', JSON.stringify(list));
 
+        await logAdminAction(`Evento archiviato: "${event.title}"`);
         revalidatePath('/[locale]/events', 'page');
         revalidatePath('/[locale]/admin', 'page');
         return { success: true, message: "Evento aggiunto all'archivio." };
     } catch (error) {
         console.error("[PAST EVENT ADD EXCEPTION]", error);
         return { success: false, message: "Errore durante il salvataggio." };
+    } finally {
+        redis.quit();
+    }
+}
+
+export async function updatePastEvent(id: string, event: { title: string; thumbnailUrl: string }) {
+    await requireAdmin();
+
+    const redis = getRedis();
+    if (!redis) return { success: false, message: "Database non configurato." };
+
+    try {
+        const raw = await redis.get('nightkids_past_events');
+        const list: PastEvent[] = raw ? JSON.parse(raw) : DEFAULT_PAST_EVENTS;
+        const updated = list.map((e) => (e.id === id ? { ...e, ...event } : e));
+        await redis.set('nightkids_past_events', JSON.stringify(updated));
+
+        await logAdminAction(`Evento archivio modificato: "${event.title}"`);
+        revalidatePath('/[locale]/events', 'page');
+        revalidatePath('/[locale]/admin', 'page');
+        return { success: true, message: "Evento aggiornato." };
+    } catch (error) {
+        console.error("[PAST EVENT UPDATE EXCEPTION]", error);
+        return { success: false, message: "Errore durante l'aggiornamento." };
     } finally {
         redis.quit();
     }
@@ -265,14 +388,41 @@ export async function deletePastEvent(id: string) {
     try {
         const raw = await redis.get('nightkids_past_events');
         const list: PastEvent[] = raw ? JSON.parse(raw) : DEFAULT_PAST_EVENTS;
+        const removed = list.find((e) => e.id === id);
         await redis.set('nightkids_past_events', JSON.stringify(list.filter(e => e.id !== id)));
 
+        if (removed) await logAdminAction(`Evento archivio rimosso: "${removed.title}"`);
         revalidatePath('/[locale]/events', 'page');
         revalidatePath('/[locale]/admin', 'page');
         return { success: true, message: "Evento rimosso dall'archivio." };
     } catch (error) {
         console.error("[PAST EVENT DELETE EXCEPTION]", error);
         return { success: false, message: "Errore durante la rimozione." };
+    } finally {
+        redis.quit();
+    }
+}
+
+export async function reorderPastEvents(orderedIds: string[]) {
+    await requireAdmin();
+
+    const redis = getRedis();
+    if (!redis) return { success: false, message: "Database non configurato." };
+
+    try {
+        const raw = await redis.get('nightkids_past_events');
+        const list: PastEvent[] = raw ? JSON.parse(raw) : DEFAULT_PAST_EVENTS;
+        const byId = new Map(list.map((e) => [e.id, e]));
+        const reordered = orderedIds.map((id) => byId.get(id)).filter((e): e is PastEvent => Boolean(e));
+        const missing = list.filter((e) => !orderedIds.includes(e.id));
+        await redis.set('nightkids_past_events', JSON.stringify([...reordered, ...missing]));
+
+        await logAdminAction("Ordine dell'archivio eventi aggiornato");
+        revalidatePath('/[locale]/events', 'page');
+        return { success: true, message: "Ordine salvato." };
+    } catch (error) {
+        console.error("[PAST EVENTS REORDER EXCEPTION]", error);
+        return { success: false, message: "Errore durante il salvataggio dell'ordine." };
     } finally {
         redis.quit();
     }

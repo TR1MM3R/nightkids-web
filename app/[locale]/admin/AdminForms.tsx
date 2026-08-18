@@ -2,6 +2,7 @@
 
 import { useActionState, useState, useEffect } from 'react';
 import { saveEventData, deleteGalleryPhoto, revalidateGallery } from '@/app/actions/admin';
+import { parseRomeLocalDate } from '@/lib/event-date';
 import FadeIn from '@/components/FadeIn';
 
 import { upload } from '@vercel/blob/client';
@@ -10,7 +11,11 @@ const initialEventState = { message: "", success: false };
 
 export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) {
     const [eventState, eventFormAction, isEventPending] = useActionState(saveEventData, initialEventState);
-    
+
+    const [previewTitle, setPreviewTitle] = useState("");
+    const [previewLocation, setPreviewLocation] = useState("");
+    const [previewDate, setPreviewDate] = useState("");
+
     const [photos, setPhotos] = useState(initialPhotos);
     const [deletingUrls, setDeletingUrls] = useState<string[]>([]);
     
@@ -91,35 +96,72 @@ export default function AdminForms({ initialPhotos }: { initialPhotos: any[] }) 
                     <form action={eventFormAction} className="space-y-4">
                         <div>
                             <label className="block text-xs uppercase tracking-widest text-gray-500 font-bold mb-2">Titolo Evento</label>
-                            <input 
-                                type="text" 
-                                name="title" 
+                            <input
+                                type="text"
+                                name="title"
                                 required
-                                placeholder="Es: Midnight Run" 
+                                placeholder="Es: Midnight Run"
+                                value={previewTitle}
+                                onChange={(e) => setPreviewTitle(e.target.value)}
                                 className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors"
                             />
                         </div>
                         <div>
                             <label className="block text-xs uppercase tracking-widest text-gray-500 font-bold mb-2">Location</label>
-                            <input 
-                                type="text" 
-                                name="location" 
+                            <input
+                                type="text"
+                                name="location"
                                 required
-                                placeholder="Es: Porte di Moncalieri, Torino" 
+                                placeholder="Es: Porte di Moncalieri, Torino"
+                                value={previewLocation}
+                                onChange={(e) => setPreviewLocation(e.target.value)}
                                 className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors"
                             />
                         </div>
                         <div>
                             <label className="block text-xs uppercase tracking-widest text-gray-500 font-bold mb-2">Data e Ora</label>
-                            <input 
-                                type="datetime-local" 
-                                name="date" 
+                            <input
+                                type="datetime-local"
+                                name="date"
                                 required
+                                value={previewDate}
+                                onChange={(e) => setPreviewDate(e.target.value)}
                                 className="w-full bg-black border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors"
                             />
                         </div>
 
-                        <button 
+                        {(previewTitle || previewLocation || previewDate) && (
+                            <div className="rounded-xl border border-red-900/40 bg-black/60 p-4">
+                                <span className="inline-block px-2 py-1 mb-3 text-[10px] font-bold text-red-500 bg-red-500/10 rounded-full uppercase tracking-wider border border-red-500/20">
+                                    Anteprima — Prossimo Raduno
+                                </span>
+                                <p className="text-lg font-black uppercase italic tracking-tighter text-white">
+                                    {previewTitle || "Titolo evento"}
+                                </p>
+                                <p className="text-xs text-gray-400 uppercase tracking-widest mt-1">
+                                    {previewLocation || "Location"}
+                                </p>
+                                <p className="text-xs text-gray-500 uppercase tracking-widest mt-1">
+                                    {previewDate
+                                        ? parseRomeLocalDate(previewDate).toLocaleDateString('it-IT', {
+                                              timeZone: 'Europe/Rome',
+                                              weekday: 'long',
+                                              day: '2-digit',
+                                              month: 'long',
+                                              year: 'numeric',
+                                          }) +
+                                          ' · ' +
+                                          parseRomeLocalDate(previewDate).toLocaleTimeString('it-IT', {
+                                              timeZone: 'Europe/Rome',
+                                              hour: '2-digit',
+                                              minute: '2-digit',
+                                          })
+                                        : "Data e ora"}
+                                </p>
+                            </div>
+                        )}
+
+                        <button
                             type="submit" 
                             disabled={isEventPending}
                             className="w-full mt-4 bg-white text-black font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-gray-200 transition-colors disabled:opacity-50"
