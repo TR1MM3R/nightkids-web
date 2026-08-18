@@ -9,7 +9,7 @@ import Countdown from "@/components/Countdown";
 import Gallery from "@/components/Gallery";
 import { getTranslations } from 'next-intl/server';
 import Redis from 'ioredis';
-import { getGalleryPhotos } from "@/app/actions/admin";
+import { getGalleryPhotos, getPartners } from "@/app/actions/admin";
 
 export async function generateMetadata({
   params,
@@ -59,6 +59,8 @@ export default async function Home() {
       console.error("Failed to fetch gallery photos", e);
   }
 
+  const partners = await getPartners();
+
   return (
     <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
       <Header />
@@ -106,7 +108,7 @@ export default async function Home() {
       </FadeIn>
 
       <FadeIn delay={0.2}>
-        <Partners />
+        <Partners partners={partners} />
       </FadeIn>
     </main>
   );

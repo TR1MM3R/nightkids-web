@@ -1,14 +1,12 @@
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 
-export default function Partners() {
+type Partner = { id: string; name: string; role: string; logoUrl: string };
+
+export default function Partners({ partners }: { partners: Partner[] }) {
     const t = useTranslations('Home.Partners');
 
-    const partners = [
-        { name: "Autobox", role: "Official Garage" },
-        { name: "Teo Noir Studio", role: "Photography & Media" },
-        { name: "[ Partner 3 ]", role: "Sponsor" },
-        { name: "[ Partner 4 ]", role: "Apparel" }
-    ];
+    if (!partners || partners.length === 0) return null;
 
     return (
         <section className="border-t border-white/5 bg-neutral-950 py-20 relative overflow-hidden">
@@ -25,11 +23,14 @@ export default function Partners() {
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {partners.map((partner, idx) => (
-                        <div key={idx} className="bg-neutral-900/50 border border-white/5 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:bg-neutral-900 hover:border-red-500/30 transition-all duration-300 group">
-                            {/* Placeholder for Partner Logo */}
-                            <div className="w-20 h-20 mb-4 bg-neutral-800 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                <span className="text-neutral-600 text-xs uppercase font-bold tracking-widest">Logo</span>
+                    {partners.map((partner) => (
+                        <div key={partner.id} className="bg-neutral-900/50 border border-white/5 rounded-2xl p-8 flex flex-col items-center justify-center text-center hover:bg-neutral-900 hover:border-red-500/30 transition-all duration-300 group">
+                            <div className="relative w-20 h-20 mb-4 bg-neutral-800 rounded-full flex items-center justify-center overflow-hidden group-hover:scale-110 transition-transform duration-300">
+                                {partner.logoUrl ? (
+                                    <Image src={partner.logoUrl} alt={partner.name} fill className="object-cover" sizes="80px" />
+                                ) : (
+                                    <span className="text-neutral-600 text-xs uppercase font-bold tracking-widest">Logo</span>
+                                )}
                             </div>
                             <h3 className="text-white font-bold uppercase tracking-wider">{partner.name}</h3>
                             <p className="text-red-500 text-xs uppercase tracking-widest mt-1">{partner.role}</p>
