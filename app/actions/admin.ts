@@ -70,10 +70,10 @@ export async function deleteGalleryPhoto(url: string) {
     try {
         await del(url);
         revalidatePath('/[locale]/admin', 'page');
-        return { success: true };
+        return { success: true, message: "Foto eliminata." };
     } catch (error) {
         console.error("[BLOB DELETE EXCEPTION]", error);
-        return { success: false };
+        return { success: false, message: "Errore durante l'eliminazione della foto." };
     }
 }
 
