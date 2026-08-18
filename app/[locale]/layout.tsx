@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
+import { SITE_URL, LOCALES } from "@/lib/site-config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,10 +26,13 @@ export async function generateMetadata({
   const description = t('description');
 
   return {
-    // TODO: aggiornare con il dominio definitivo una volta acquistato
-    metadataBase: new URL('https://nightkids-web.vercel.app'),
+    metadataBase: new URL(SITE_URL),
     title,
     description,
+    alternates: {
+      canonical: `/${locale}`,
+      languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}`])),
+    },
     openGraph: {
       title,
       description,
@@ -47,6 +51,7 @@ export async function generateMetadata({
 import Footer from "@/components/Footer";
 import WhatsAppCTA from "@/components/WhatsAppCTA";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default async function RootLayout({
   children,
@@ -72,6 +77,7 @@ export default async function RootLayout({
           <Footer />
           <WhatsAppCTA />
           <Analytics />
+          <SpeedInsights />
         </NextIntlClientProvider>
       </body>
     </html>

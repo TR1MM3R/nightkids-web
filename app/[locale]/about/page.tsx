@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
+import { LOCALES } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -11,7 +12,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Metadata.About' });
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: `/${locale}/about`,
+      languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}/about`])),
+    },
+  };
 }
 
 export default function AboutPage() {

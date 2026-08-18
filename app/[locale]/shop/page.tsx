@@ -4,6 +4,7 @@ import FadeIn from "@/components/FadeIn";
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
 import SubscribeForm from "@/components/SubscribeForm";
+import { LOCALES } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -12,7 +13,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Metadata.Shop' });
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: `/${locale}/shop`,
+      languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}/shop`])),
+    },
+  };
 }
 
 export default function ShopPage() {

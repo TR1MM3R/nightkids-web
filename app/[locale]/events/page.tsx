@@ -5,6 +5,7 @@ import FadeIn from "@/components/FadeIn";
 import { getTranslations } from 'next-intl/server';
 import { getPastEvents } from "@/app/actions/admin";
 import Redis from 'ioredis';
+import { LOCALES } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -13,7 +14,14 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'Metadata.Events' });
-  return { title: t('title'), description: t('description') };
+  return {
+    title: t('title'),
+    description: t('description'),
+    alternates: {
+      canonical: `/${locale}/events`,
+      languages: Object.fromEntries(LOCALES.map((l) => [l, `/${l}/events`])),
+    },
+  };
 }
 
 const getRedis = () => {
