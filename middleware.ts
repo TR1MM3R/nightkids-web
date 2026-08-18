@@ -1,5 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
+import { isValidAdminAuth } from '@/lib/admin-auth';
 
 const intlMiddleware = createMiddleware({
     // A list of all locales that are supported
@@ -11,24 +12,14 @@ const intlMiddleware = createMiddleware({
 
 export default function middleware(req: NextRequest) {
     const url = req.nextUrl;
-    
+
     // Protect /admin routes
     if (url.pathname.includes('/admin')) {
-        const basicAuth = req.headers.get('authorization');
-        
-        const validUser = process.env.ADMIN_USER;
-        const validPass = process.env.ADMIN_PASS;
-
-        if (basicAuth && validUser && validPass) {
-            const authValue = basicAuth.split(' ')[1];
-            const [user, pwd] = atob(authValue).split(':');
-
-            if (user === validUser && pwd === validPass) {
-                // If authenticated, let next-intl handle the routing
-                return intlMiddleware(req);
-            }
+        if (isValidAdminAuth(req.headers.get('authorization'))) {
+            // If authenticated, let next-intl handle the routing
+            return intlMiddleware(req);
         }
-        
+
         // If no auth or invalid auth, prompt for password
         return new NextResponse('Auth Required', {
             status: 401,
