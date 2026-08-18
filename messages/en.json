@@ -64,7 +64,12 @@
         "upcomingMeetDesc": "Get ready for the next official car meet. Cars, bikes, passion, and street culture. Follow our IG for updates.",
         "when": "When",
         "where": "Where",
-        "infoIg": "IG Info"
+        "infoIg": "IG Info",
+        "addToCalendar": "Add to Calendar",
+        "mapTitle": "Meet location map",
+        "rsvpCta": "I'll be there! 🔥",
+        "rsvpJoined": "Going! 🔥",
+        "rsvpCount": "{count} confirmed"
     },
     "About": {
         "photoPlaceholder": "[ Team Portrait ]",

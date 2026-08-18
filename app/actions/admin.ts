@@ -2,6 +2,8 @@
 
 import Redis from 'ioredis';
 import { revalidatePath } from 'next/cache';
+import { parseRomeLocalDate } from '@/lib/event-date';
+import { notifySubscribersOfNewEvent } from '@/lib/notify-subscribers';
 
 const getRedis = () => {
     // Check for the specific variable from the screenshot, or standard REDIS_URL
@@ -26,9 +28,34 @@ export async function saveEventData(prevState: any, formData: FormData) {
     }
 
     try {
+        const [prevTitle, prevDate] = await Promise.all([
+            redis.get('nightkids_event_title'),
+            redis.get('nightkids_event_date'),
+        ]);
+        const isNewEvent = prevTitle !== title || prevDate !== date;
+
         await redis.set('nightkids_event_title', title);
         await redis.set('nightkids_event_location', location);
         await redis.set('nightkids_event_date', date);
+
+        if (isNewEvent) {
+            // Nuovo evento o data cambiata: azzera il contatore "Ci sarò" e
+            // avvisa gli iscritti alla newsletter (entrambe best-effort, non
+            // devono far fallire il salvataggio se qualcosa va storto).
+            await redis.set('nightkids_event_rsvp_count', '0');
+
+            const dateLabel = date
+                ? parseRomeLocalDate(date).toLocaleDateString('it-IT', {
+                      timeZone: 'Europe/Rome',
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                  })
+                : '';
+            await notifySubscribersOfNewEvent({ title, dateLabel, location });
+        }
 
         // Revalidate the home page so the new countdown date shows up instantly
         revalidatePath('/');
@@ -39,6 +66,39 @@ export async function saveEventData(prevState: any, formData: FormData) {
     } catch (error) {
         console.error("[KV EXCEPTION]", error);
         return { message: "Errore durante il salvataggio sul database.", success: false };
+    } finally {
+        redis.quit();
+    }
+}
+
+// ---- RSVP ("Ci sarò") ----
+
+export async function getRsvpCount(): Promise<number> {
+    const redis = getRedis();
+    if (!redis) return 0;
+
+    try {
+        const raw = await redis.get('nightkids_event_rsvp_count');
+        return raw ? parseInt(raw, 10) : 0;
+    } catch (error) {
+        console.error("[RSVP COUNT FETCH EXCEPTION]", error);
+        return 0;
+    } finally {
+        redis.quit();
+    }
+}
+
+export async function incrementRsvpCount(): Promise<{ count: number }> {
+    const redis = getRedis();
+    if (!redis) return { count: 0 };
+
+    try {
+        const count = await redis.incr('nightkids_event_rsvp_count');
+        revalidatePath('/[locale]/events', 'page');
+        return { count };
+    } catch (error) {
+        console.error("[RSVP INCREMENT EXCEPTION]", error);
+        return { count: 0 };
     } finally {
         redis.quit();
     }

@@ -3,10 +3,11 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
 import { getTranslations } from 'next-intl/server';
-import { getPastEvents } from "@/app/actions/admin";
+import { getPastEvents, getRsvpCount } from "@/app/actions/admin";
 import Redis from 'ioredis';
 import { LOCALES } from "@/lib/site-config";
-import { parseRomeLocalDate } from "@/lib/event-date";
+import { parseRomeLocalDate, toGoogleCalendarUTC } from "@/lib/event-date";
+import RsvpWidget from "@/components/RsvpWidget";
 
 export async function generateMetadata({
   params,
@@ -35,6 +36,7 @@ export default async function EventsPage() {
     const t = await getTranslations('Events');
     const redis = getRedis();
     const pastEvents = await getPastEvents();
+    const rsvpCount = await getRsvpCount();
 
     let targetDateStr = t('upcomingMeetDate'); // fallback
     let locationStr = t('upcomingMeetLocation'); // fallback
@@ -66,6 +68,9 @@ export default async function EventsPage() {
             redis.quit();
         }
     }
+
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(titleStr)}&dates=${toGoogleCalendarUTC(new Date(startDateISO))}/${toGoogleCalendarUTC(new Date(endDateISO))}&details=${encodeURIComponent(t('upcomingMeetDesc'))}&location=${encodeURIComponent(locationStr)}`;
+    const rsvpEventKey = `${titleStr}::${startDateISO}`;
 
     return (
         <main className="min-h-screen bg-black text-white selection:bg-red-500 selection:text-white">
@@ -139,10 +144,28 @@ export default async function EventsPage() {
                                         <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{t('where')}</p>
                                         <p className="font-bold text-white uppercase">{locationStr}</p>
                                     </div>
-                                    <a href="https://www.instagram.com/nightkids2.0/" target="_blank" rel="noopener noreferrer" className="mt-4 block text-center w-full bg-red-600 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-red-700 transition-colors">
+
+                                    <RsvpWidget initialCount={rsvpCount} eventKey={rsvpEventKey} />
+
+                                    <a href="https://www.instagram.com/nightkids2.0/" target="_blank" rel="noopener noreferrer" className="mt-2 block text-center w-full bg-red-600 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-red-700 transition-colors">
                                         {t('infoIg')}
                                     </a>
+                                    <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full border border-white/20 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-white/10 transition-colors">
+                                        {t('addToCalendar')}
+                                    </a>
                                 </div>
+                            </div>
+
+                            <div className="mt-8 relative z-10 rounded-2xl overflow-hidden border border-white/10 h-64">
+                                <iframe
+                                    src={`https://www.google.com/maps?q=${encodeURIComponent(locationStr)}&output=embed`}
+                                    width="100%"
+                                    height="100%"
+                                    style={{ border: 0 }}
+                                    loading="lazy"
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    title={t('mapTitle')}
+                                />
                             </div>
                         </div>
                     </FadeIn>

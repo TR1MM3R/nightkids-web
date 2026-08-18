@@ -64,7 +64,12 @@
         "upcomingMeetDesc": "Preparati per il prossimo raduno ufficiale. Auto, moto, passione e cultura street. Segui il nostro IG per aggiornamenti.",
         "when": "Quando",
         "where": "Dove",
-        "infoIg": "Info su IG"
+        "infoIg": "Info su IG",
+        "addToCalendar": "Aggiungi al Calendario",
+        "mapTitle": "Mappa del raduno",
+        "rsvpCta": "Ci sarò! 🔥",
+        "rsvpJoined": "Presente! 🔥",
+        "rsvpCount": "{count} confermati"
     },
     "About": {
         "photoPlaceholder": "[ Ritratto Team ]",

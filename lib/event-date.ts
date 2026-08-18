@@ -37,3 +37,8 @@ function getRomeOffsetMinutes(date: Date): number {
 
     return (asIfUTC - date.getTime()) / 60_000;
 }
+
+// Formato richiesto da Google Calendar per il parametro "dates" (YYYYMMDDTHHMMSSZ).
+export function toGoogleCalendarUTC(date: Date): string {
+    return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+}
