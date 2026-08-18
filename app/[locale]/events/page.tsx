@@ -8,6 +8,7 @@ import Redis from 'ioredis';
 import { LOCALES } from "@/lib/site-config";
 import { parseRomeLocalDate, toGoogleCalendarUTC } from "@/lib/event-date";
 import RsvpWidget from "@/components/RsvpWidget";
+import ShareButton from "@/components/ShareButton";
 
 export async function generateMetadata({
   params,
@@ -153,6 +154,7 @@ export default async function EventsPage() {
                                     <a href={calendarUrl} target="_blank" rel="noopener noreferrer" className="block text-center w-full border border-white/20 text-white font-bold uppercase tracking-widest px-6 py-3 rounded hover:bg-white/10 transition-colors">
                                         {t('addToCalendar')}
                                     </a>
+                                    <ShareButton title={titleStr} />
                                 </div>
                             </div>
 

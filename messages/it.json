@@ -15,12 +15,17 @@
         "Shop": {
             "title": "Shop | NightKids",
             "description": "Il merch ufficiale NightKids sta arrivando. Iscriviti per l'accesso anticipato alla nuova collezione."
+        },
+        "Rules": {
+            "title": "Regole del Raduno | NightKids",
+            "description": "Le regole di base per partecipare ai raduni NightKids: rispetto della strada, dei residenti e degli altri membri."
         }
     },
     "Navigation": {
         "home": "Home",
         "events": "Ultimi Eventi",
         "about": "Chi Siamo",
+        "rules": "Regole",
         "shop": "Shop"
     },
     "Home": {
@@ -69,7 +74,9 @@
         "mapTitle": "Mappa del raduno",
         "rsvpCta": "Ci sarò! 🔥",
         "rsvpJoined": "Presente! 🔥",
-        "rsvpCount": "{count} confermati"
+        "rsvpCount": "{count} confermati",
+        "share": "Condividi",
+        "linkCopied": "Link copiato!"
     },
     "About": {
         "photoPlaceholder": "[ Ritratto Team ]",
@@ -101,5 +108,18 @@
         "social": "Social",
         "contact": "Contatti & Collab",
         "rights": "Tutti i diritti riservati."
+    },
+    "Rules": {
+        "title": "Regole del Raduno",
+        "subtitle": "Poche regole semplici, per continuare a trovare posti dove ritrovarci.",
+        "items": [
+            "Rispetta il codice della strada nel tragitto: il raduno inizia e finisce sulla strada pubblica.",
+            "Niente drift, burnout o manovre pericolose fuori dalle aree autorizzate.",
+            "Rispetta i residenti e le attività della zona: niente clacson o motori accesi a vuoto fuori orario.",
+            "Porta via i tuoi rifiuti, lascia il posto come l'hai trovato.",
+            "Rispetta gli altri membri e le loro auto.",
+            "Segui le indicazioni di chi organizza sul posto."
+        ],
+        "footer": "Non rispettare queste regole mette a rischio i posti che la community può usare per i prossimi raduni."
     }
 }

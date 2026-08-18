@@ -15,12 +15,17 @@
         "Shop": {
             "title": "Shop | NightKids",
             "description": "Official NightKids merch is coming. Sign up for early access to the new collection."
+        },
+        "Rules": {
+            "title": "Meet Rules | NightKids",
+            "description": "Basic rules for joining NightKids meets: respect for the road, residents, and other members."
         }
     },
     "Navigation": {
         "home": "Home",
         "events": "Latest Events",
         "about": "About Us",
+        "rules": "Rules",
         "shop": "Shop"
     },
     "Home": {
@@ -69,7 +74,9 @@
         "mapTitle": "Meet location map",
         "rsvpCta": "I'll be there! 🔥",
         "rsvpJoined": "Going! 🔥",
-        "rsvpCount": "{count} confirmed"
+        "rsvpCount": "{count} confirmed",
+        "share": "Share",
+        "linkCopied": "Link copied!"
     },
     "About": {
         "photoPlaceholder": "[ Team Portrait ]",
@@ -101,5 +108,18 @@
         "social": "Social",
         "contact": "Contact & Collabs",
         "rights": "All rights reserved."
+    },
+    "Rules": {
+        "title": "Meet Rules",
+        "subtitle": "A few simple rules, so we keep finding places to meet up.",
+        "items": [
+            "Respect the highway code on the way there: the meet starts and ends on public roads.",
+            "No drifting, burnouts, or dangerous manoeuvres outside authorized areas.",
+            "Respect local residents and businesses: no honking or idling engines outside proper hours.",
+            "Take your trash with you, leave the place as you found it.",
+            "Respect other members and their cars.",
+            "Follow on-site organizers' instructions."
+        ],
+        "footer": "Not respecting these rules puts at risk the places the community can use for future meets."
     }
 }

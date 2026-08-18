@@ -46,6 +46,9 @@ export default function Header() {
                     <Link href={getLink('/about')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
                         {t('about')}
                     </Link>
+                    <Link href={getLink('/rules')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
+                        {t('rules')}
+                    </Link>
                     <Link href={getLink('/shop')} className="text-sm font-medium text-gray-300 hover:text-white transition-colors uppercase tracking-widest">
                         {t('shop')}
                     </Link>
@@ -103,6 +106,13 @@ export default function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
                         {t('about')}
+                    </Link>
+                    <Link
+                        href={getLink('/rules')}
+                        className="text-lg font-bold text-gray-300 uppercase tracking-widest hover:text-white"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                        {t('rules')}
                     </Link>
                     <Link
                         href={getLink('/shop')}
