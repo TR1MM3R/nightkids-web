@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
 import { useTranslations } from 'next-intl';
 import { getTranslations } from 'next-intl/server';
-import { LOCALES } from "@/lib/site-config";
+import { LOCALES, WHATSAPP_COMMUNITY_URL } from "@/lib/site-config";
 
 export async function generateMetadata({
   params,
@@ -62,9 +62,14 @@ export default function AboutPage() {
                             </div>
 
                             <div className="pt-4">
-                                <div className="inline-block px-6 py-3 border border-red-600 text-red-500 font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all duration-300 cursor-pointer">
+                                <a
+                                    href={WHATSAPP_COMMUNITY_URL}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-block px-6 py-3 border border-red-600 text-red-500 font-bold uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all duration-300"
+                                >
                                     {t('cta')}
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>

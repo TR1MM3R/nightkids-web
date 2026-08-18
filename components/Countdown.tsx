@@ -10,10 +10,10 @@ interface CountdownProps {
     titleStr?: string;
 }
 
-export default function Countdown({ 
-    targetDateStr = "2026-08-28T22:00:00", 
-    locationStr = "Porte di Moncalieri, Torino", 
-    titleStr = "Midnight Run" 
+export default function Countdown({
+    targetDateStr = "2026-08-28T22:00:00+02:00",
+    locationStr = "Porte di Moncalieri, Torino",
+    titleStr = "Midnight Run"
 }: CountdownProps) {
     const t = useTranslations('Countdown');
     const targetDate = new Date(targetDateStr).getTime();
@@ -25,6 +25,7 @@ export default function Countdown({
         seconds: 0
     });
     const [isMounted, setIsMounted] = useState(false);
+    const [isPast, setIsPast] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
@@ -32,7 +33,9 @@ export default function Countdown({
             const now = new Date().getTime();
             const distance = targetDate - now;
 
-            if (distance < 0) {
+            if (distance <= 0) {
+                setIsPast(true);
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
                 clearInterval(timer);
                 return;
             }
@@ -72,35 +75,41 @@ export default function Countdown({
                             </a>
                         </div>
 
-                        <div className="flex gap-4 md:gap-8 justify-center">
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
-                                    {String(timeLeft.days).padStart(2, '0')}
-                                </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('days')}</div>
+                        {isPast ? (
+                            <div className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">
+                                {t('live')}
                             </div>
-                            <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
-                                    {String(timeLeft.hours).padStart(2, '0')}
+                        ) : (
+                            <div className="flex gap-4 md:gap-8 justify-center">
+                                <div className="flex flex-col items-center">
+                                    <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
+                                        {String(timeLeft.days).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('days')}</div>
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('hours')}</div>
-                            </div>
-                            <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
-                            <div className="flex flex-col items-center">
-                                <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
-                                    {String(timeLeft.minutes).padStart(2, '0')}
+                                <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
+                                <div className="flex flex-col items-center">
+                                    <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
+                                        {String(timeLeft.hours).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('hours')}</div>
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('minutes')}</div>
-                            </div>
-                            <div className="hidden md:block text-4xl md:text-6xl font-black text-gray-700">:</div>
-                            <div className="hidden md:flex flex-col items-center">
-                                <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
-                                    {String(timeLeft.seconds).padStart(2, '0')}
+                                <div className="text-4xl md:text-6xl font-black text-gray-700">:</div>
+                                <div className="flex flex-col items-center">
+                                    <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
+                                        {String(timeLeft.minutes).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('minutes')}</div>
                                 </div>
-                                <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('seconds')}</div>
+                                <div className="hidden md:block text-4xl md:text-6xl font-black text-gray-700">:</div>
+                                <div className="hidden md:flex flex-col items-center">
+                                    <div className="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-500 tabular-nums">
+                                        {String(timeLeft.seconds).padStart(2, '0')}
+                                    </div>
+                                    <div className="text-xs text-gray-500 uppercase tracking-widest mt-2 font-bold">{t('seconds')}</div>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                 </FadeIn>
             </div>

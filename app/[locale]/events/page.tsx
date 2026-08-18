@@ -6,6 +6,7 @@ import { getTranslations } from 'next-intl/server';
 import { getPastEvents } from "@/app/actions/admin";
 import Redis from 'ioredis';
 import { LOCALES } from "@/lib/site-config";
+import { parseRomeLocalDate } from "@/lib/event-date";
 
 export async function generateMetadata({
   params,
@@ -49,9 +50,11 @@ export default async function EventsPage() {
             const fetchedTitle = await redis.get('nightkids_event_title');
 
             if (fetchedDate) {
-                // Formattiamo la data per leggerla meglio (es: 28/08/2026 22:00)
-                const d = new Date(fetchedDate);
-                targetDateStr = d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+                // La data salvata dall'admin è "locale" (ora di Roma, senza fuso):
+                // va interpretata sempre come Europe/Rome, non con il fuso del
+                // server o del browser, altrimenti JSON-LD e countdown sfasano.
+                const d = parseRomeLocalDate(fetchedDate);
+                targetDateStr = d.toLocaleDateString('it-IT', { timeZone: 'Europe/Rome' }) + ' ' + d.toLocaleTimeString('it-IT', { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit' });
                 startDateISO = d.toISOString();
                 endDateISO = new Date(d.getTime() + 4 * 60 * 60 * 1000).toISOString();
             }

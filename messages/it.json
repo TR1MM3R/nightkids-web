@@ -50,7 +50,8 @@
         "Partners": {
             "title": "Partners & Collaborazioni",
             "subtitle": "Le realtà che supportano la nostra visione"
-        }
+        },
+        "galleryTitle": "Galleria NightKids"
     },
     "Events": {
         "titleSeason": "Stagione 2025",
@@ -87,6 +88,13 @@
         "days": "Giorni",
         "hours": "Ore",
         "minutes": "Minuti",
-        "seconds": "Secondi"
+        "seconds": "Secondi",
+        "live": "Evento in corso!"
+    },
+    "Footer": {
+        "tagline": "Team di Street Racing e Car Community di Torino, Italia.",
+        "social": "Social",
+        "contact": "Contatti & Collab",
+        "rights": "Tutti i diritti riservati."
     }
 }

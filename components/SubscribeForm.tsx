@@ -1,19 +1,23 @@
 "use client";
 
 import { useActionState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { subscribeAction } from "@/app/actions/subscribe";
 
-export default function SubscribeForm({ 
-    emailPlaceholder, 
-    notifyMeText 
-}: { 
-    emailPlaceholder: string; 
+export default function SubscribeForm({
+    emailPlaceholder,
+    notifyMeText
+}: {
+    emailPlaceholder: string;
     notifyMeText: string;
 }) {
+    const pathname = usePathname();
+    const locale = pathname.startsWith('/en') ? 'en' : 'it';
     const [state, formAction, isPending] = useActionState(subscribeAction, { message: "", success: false });
 
     return (
         <form action={formAction} className="flex flex-col gap-4 w-full">
+            <input type="hidden" name="locale" value={locale} />
             <div className="flex flex-col md:flex-row gap-4 w-full">
                 <input
                     type="email"

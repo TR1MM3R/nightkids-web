@@ -10,6 +10,7 @@ import Gallery from "@/components/Gallery";
 import { getTranslations } from 'next-intl/server';
 import Redis from 'ioredis';
 import { getGalleryPhotos, getPartners } from "@/app/actions/admin";
+import { parseRomeLocalDate } from "@/lib/event-date";
 
 export async function generateMetadata({
   params,
@@ -31,7 +32,7 @@ export default async function Home() {
   const t = await getTranslations('Home');
   const redis = getRedis();
 
-  let targetDateStr = "2026-08-28T22:00:00";
+  let targetDateStr = parseRomeLocalDate("2026-08-28T22:00:00").toISOString();
   let locationStr = "Porte di Moncalieri, Torino";
   let titleStr = "Midnight Run";
   
@@ -43,7 +44,10 @@ export default async function Home() {
           const fetchedLoc = await redis.get('nightkids_event_location');
           const fetchedTitle = await redis.get('nightkids_event_title');
 
-          if (fetchedDate) targetDateStr = fetchedDate;
+          // La data salvata dall'admin è "locale" (ora di Roma, senza fuso):
+          // convertita subito in un istante UTC assoluto, così il countdown
+          // è corretto per qualunque visitatore, non solo per chi è in Italia.
+          if (fetchedDate) targetDateStr = parseRomeLocalDate(fetchedDate).toISOString();
           if (fetchedLoc) locationStr = fetchedLoc;
           if (fetchedTitle) titleStr = fetchedTitle;
       } catch (e) {

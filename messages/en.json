@@ -50,7 +50,8 @@
         "Partners": {
             "title": "Partners & Collabs",
             "subtitle": "The brands that support our vision"
-        }
+        },
+        "galleryTitle": "NightKids Gallery"
     },
     "Events": {
         "titleSeason": "Season 2025",
@@ -87,6 +88,13 @@
         "days": "Days",
         "hours": "Hours",
         "minutes": "Minutes",
-        "seconds": "Seconds"
+        "seconds": "Seconds",
+        "live": "Event is live!"
+    },
+    "Footer": {
+        "tagline": "Street Racing Team & Car Community based in Turin, Italy.",
+        "social": "Social",
+        "contact": "Contact & Collabs",
+        "rights": "All rights reserved."
     }
 }
