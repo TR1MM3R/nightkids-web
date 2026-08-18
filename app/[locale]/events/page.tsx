@@ -16,6 +16,9 @@ export default async function EventsPage() {
     let targetDateStr = t('upcomingMeetDate'); // fallback
     let locationStr = t('upcomingMeetLocation'); // fallback
     let titleStr = t('upcomingMeetTitle'); // fallback
+    // Usati per lo schema.org JSON-LD sotto: devono restare in sync con l'evento impostato dall'admin
+    let startDateISO = "2026-08-28T22:00:00+02:00";
+    let endDateISO = "2026-08-29T02:00:00+02:00";
 
     if (redis) {
         try {
@@ -27,6 +30,8 @@ export default async function EventsPage() {
                 // Formattiamo la data per leggerla meglio (es: 28/08/2026 22:00)
                 const d = new Date(fetchedDate);
                 targetDateStr = d.toLocaleDateString('it-IT') + ' ' + d.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
+                startDateISO = d.toISOString();
+                endDateISO = new Date(d.getTime() + 4 * 60 * 60 * 1000).toISOString();
             }
             if (fetchedLoc) locationStr = fetchedLoc;
             if (fetchedTitle) titleStr = fetchedTitle;
@@ -49,8 +54,8 @@ export default async function EventsPage() {
                         "@context": "https://schema.org",
                         "@type": "Event",
                         "name": titleStr,
-                        "startDate": "2026-08-28T22:00:00+02:00",
-                        "endDate": "2026-08-29T02:00:00+02:00",
+                        "startDate": startDateISO,
+                        "endDate": endDateISO,
                         "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
                         "eventStatus": "https://schema.org/EventScheduled",
                         "location": {

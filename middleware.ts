@@ -16,12 +16,12 @@ export default function middleware(req: NextRequest) {
     if (url.pathname.includes('/admin')) {
         const basicAuth = req.headers.get('authorization');
         
-        if (basicAuth) {
+        const validUser = process.env.ADMIN_USER;
+        const validPass = process.env.ADMIN_PASS;
+
+        if (basicAuth && validUser && validPass) {
             const authValue = basicAuth.split(' ')[1];
             const [user, pwd] = atob(authValue).split(':');
-
-            const validUser = process.env.ADMIN_USER || 'admin';
-            const validPass = process.env.ADMIN_PASS || 'nightkids2026';
 
             if (user === validUser && pwd === validPass) {
                 // If authenticated, let next-intl handle the routing
