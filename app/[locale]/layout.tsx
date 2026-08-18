@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,10 +14,35 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "NightKids | Street Racing Team & Car Culture",
-  description: "NightKids is a collective of creators, mechanics, and drivers united by underground car culture, speed, and the art of drifting.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata.Home' });
+  const title = t('title');
+  const description = t('description');
+
+  return {
+    // TODO: aggiornare con il dominio definitivo una volta acquistato
+    metadataBase: new URL('https://nightkids-web.vercel.app'),
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      siteName: 'NightKids',
+      locale: locale === 'it' ? 'it_IT' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
+}
 
 import Footer from "@/components/Footer";
 import WhatsAppCTA from "@/components/WhatsAppCTA";

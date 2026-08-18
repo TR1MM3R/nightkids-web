@@ -1,4 +1,22 @@
 {
+    "Metadata": {
+        "Home": {
+            "title": "NightKids | Street Racing Team & Car Culture",
+            "description": "NightKids is a collective of creators, mechanics, and drivers united by underground car culture, speed, and the art of drifting. Turin, Italy."
+        },
+        "Events": {
+            "title": "Events & Meets | NightKids",
+            "description": "The next official NightKids meet and the archive of past events: touge, drift, and car meets in and around Turin."
+        },
+        "About": {
+            "title": "About Us | NightKids",
+            "description": "The story and philosophy of NightKids: a collective of creators, mechanics, and drivers united by underground car culture."
+        },
+        "Shop": {
+            "title": "Shop | NightKids",
+            "description": "Official NightKids merch is coming. Sign up for early access to the new collection."
+        }
+    },
     "Navigation": {
         "home": "Home",
         "events": "Latest Events",

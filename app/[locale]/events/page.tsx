@@ -1,7 +1,18 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import FadeIn from "@/components/FadeIn";
 import { getTranslations } from 'next-intl/server';
 import Redis from 'ioredis';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'Metadata.Events' });
+  return { title: t('title'), description: t('description') };
+}
 
 const getRedis = () => {
     const redisUrl = process.env.KV_REST_API_REDIS_URL || process.env.REDIS_URL;

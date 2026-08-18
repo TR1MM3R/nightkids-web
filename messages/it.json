@@ -1,4 +1,22 @@
 {
+    "Metadata": {
+        "Home": {
+            "title": "NightKids | Street Racing Team & Car Culture",
+            "description": "NightKids è un collettivo di creator, meccanici e piloti uniti dalla cultura automobilistica underground, dalla velocità e dall'arte del drift. Torino."
+        },
+        "Events": {
+            "title": "Eventi e Raduni | NightKids",
+            "description": "Il prossimo raduno ufficiale NightKids e l'archivio degli eventi passati: touge, drift e car meet a Torino e dintorni."
+        },
+        "About": {
+            "title": "Chi Siamo | NightKids",
+            "description": "La storia e la filosofia di NightKids: un collettivo di creator, meccanici e piloti uniti dalla cultura automobilistica underground."
+        },
+        "Shop": {
+            "title": "Shop | NightKids",
+            "description": "Il merch ufficiale NightKids sta arrivando. Iscriviti per l'accesso anticipato alla nuova collezione."
+        }
+    },
     "Navigation": {
         "home": "Home",
         "events": "Ultimi Eventi",
