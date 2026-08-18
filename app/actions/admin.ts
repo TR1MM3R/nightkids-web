@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { revalidatePath } from 'next/cache';
 import { parseRomeLocalDate } from '@/lib/event-date';
 import { notifySubscribersOfNewEvent } from '@/lib/notify-subscribers';
+import { requireAdmin } from '@/lib/admin-auth';
 
 const getRedis = () => {
     // Check for the specific variable from the screenshot, or standard REDIS_URL
@@ -15,6 +16,8 @@ const getRedis = () => {
 };
 
 export async function saveEventData(prevState: any, formData: FormData) {
+    await requireAdmin();
+
     const title = formData.get("title") as string;
     const location = formData.get("location") as string;
     const date = formData.get("date") as string;
@@ -104,29 +107,11 @@ export async function incrementRsvpCount(): Promise<{ count: number }> {
     }
 }
 
-import { put, del, list } from '@vercel/blob';
-
-export async function uploadGalleryPhoto(prevState: any, formData: FormData) {
-    const file = formData.get("file") as File;
-    
-    if (!file || file.size === 0) {
-        return { message: "Nessun file selezionato.", success: false };
-    }
-
-    try {
-        const blob = await put(`nightkids/gallery/${file.name}`, file, {
-            access: 'public',
-        });
-        
-        revalidatePath('/[locale]/admin', 'page');
-        return { message: "Foto caricata con successo!", success: true, url: blob.url };
-    } catch (error: any) {
-        console.error("[BLOB UPLOAD EXCEPTION]", error);
-        return { message: `Errore: ${error?.message || "sconosciuto"}`, success: false };
-    }
-}
+import { del, list } from '@vercel/blob';
 
 export async function deleteGalleryPhoto(url: string) {
+    await requireAdmin();
+
     try {
         await del(url);
         revalidatePath('/[locale]/admin', 'page');
@@ -148,6 +133,7 @@ export async function getGalleryPhotos() {
 }
 
 export async function revalidateGallery() {
+    await requireAdmin();
     revalidatePath('/', 'layout');
 }
 
@@ -176,6 +162,8 @@ export async function getPartners(): Promise<Partner[]> {
 }
 
 export async function addPartner(partner: { name: string; role: string; logoUrl: string }) {
+    await requireAdmin();
+
     const redis = getRedis();
     if (!redis) return { success: false, message: "Database non configurato." };
 
@@ -197,6 +185,8 @@ export async function addPartner(partner: { name: string; role: string; logoUrl:
 }
 
 export async function deletePartner(id: string) {
+    await requireAdmin();
+
     const redis = getRedis();
     if (!redis) return { success: false, message: "Database non configurato." };
 
@@ -243,6 +233,8 @@ export async function getPastEvents(): Promise<PastEvent[]> {
 }
 
 export async function addPastEvent(event: { title: string; thumbnailUrl: string }) {
+    await requireAdmin();
+
     const redis = getRedis();
     if (!redis) return { success: false, message: "Database non configurato." };
 
@@ -265,6 +257,8 @@ export async function addPastEvent(event: { title: string; thumbnailUrl: string 
 }
 
 export async function deletePastEvent(id: string) {
+    await requireAdmin();
+
     const redis = getRedis();
     if (!redis) return { success: false, message: "Database non configurato." };
 
