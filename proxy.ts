@@ -10,7 +10,7 @@ const intlMiddleware = createMiddleware({
     defaultLocale: 'it'
 });
 
-export default function middleware(req: NextRequest) {
+export default function proxy(req: NextRequest) {
     const url = req.nextUrl;
 
     // Protect /admin routes
