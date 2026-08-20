@@ -1,12 +1,16 @@
 import { handleUpload, type HandleUploadBody } from '@vercel/blob/client';
 import { NextResponse } from 'next/server';
-import { isValidAdminAuth } from '@/lib/admin-auth';
+import { cookies } from 'next/headers';
+import { ADMIN_SESSION_COOKIE, isValidSessionCookie } from '@/lib/admin-session';
 
 export async function POST(request: Request): Promise<NextResponse> {
-  // Questa route non è coperta da middleware.ts (esclude /api), quindi va
-  // protetta qui: senza questo controllo chiunque potrebbe ottenere un token
-  // di upload valido e caricare immagini nella galleria pubblica.
-  if (!isValidAdminAuth(request.headers.get('authorization'))) {
+  // Questa route non è coperta da proxy.ts (esclude /api), quindi va protetta
+  // qui: senza questo controllo chiunque potrebbe ottenere un token di upload
+  // valido e caricare immagini nella galleria pubblica. Verifica tramite
+  // cookie di sessione, non più header Authorization — vedi admin-session.ts.
+  const cookieStore = await cookies();
+  const session = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+  if (!(await isValidSessionCookie(session))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

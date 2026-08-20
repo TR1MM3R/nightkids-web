@@ -1,3 +1,5 @@
+import AdminLogoutButton from './AdminLogoutButton';
+
 export default function AdminLayout({
   children,
 }: {
@@ -11,7 +13,10 @@ export default function AdminLayout({
                     <span className="text-xl font-black uppercase italic tracking-tighter text-red-500">NightKids</span>
                     <span className="text-xs uppercase tracking-widest text-gray-500 font-bold border-l border-white/10 pl-4">Admin Dashboard</span>
                 </div>
-                <a href="/it" className="text-xs uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Torna al sito</a>
+                <div className="flex items-center gap-4">
+                    <AdminLogoutButton />
+                    <a href="/it" className="text-xs uppercase tracking-widest text-gray-400 hover:text-white transition-colors">Torna al sito</a>
+                </div>
             </div>
         </header>
         <main className="p-6 md:p-12">

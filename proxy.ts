@@ -1,6 +1,6 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
-import { isValidAdminAuth } from '@/lib/admin-auth';
+import { ADMIN_SESSION_COOKIE, isValidSessionCookie } from '@/lib/admin-session';
 
 const intlMiddleware = createMiddleware({
     // A list of all locales that are supported
@@ -10,23 +10,24 @@ const intlMiddleware = createMiddleware({
     defaultLocale: 'it'
 });
 
-export default function proxy(req: NextRequest) {
+export default async function proxy(req: NextRequest) {
     const url = req.nextUrl;
+    const isAdminRoute = url.pathname.includes('/admin');
+    const isLoginRoute = url.pathname.includes('/admin/login');
 
-    // Protect /admin routes
-    if (url.pathname.includes('/admin')) {
-        if (isValidAdminAuth(req.headers.get('authorization'))) {
+    // Protect /admin routes (tranne il login stesso, altrimenti nessuno potrebbe
+    // raggiungerlo per autenticarsi)
+    if (isAdminRoute && !isLoginRoute) {
+        const session = req.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+        if (await isValidSessionCookie(session)) {
             // If authenticated, let next-intl handle the routing
             return intlMiddleware(req);
         }
 
-        // If no auth or invalid auth, prompt for password
-        return new NextResponse('Auth Required', {
-            status: 401,
-            headers: {
-                'WWW-Authenticate': 'Basic realm="Secure Area"',
-            },
-        });
+        // Nessuna sessione valida: redirect al login. Non più un prompt Basic
+        // Auth via WWW-Authenticate — vedi admin-session.ts per il perché.
+        const locale = url.pathname.startsWith('/en') ? 'en' : 'it';
+        return NextResponse.redirect(new URL(`/${locale}/admin/login`, req.url));
     }
 
     // For all other routes, let next-intl handle it
